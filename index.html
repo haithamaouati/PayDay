@@ -20,7 +20,7 @@
     <header class="header">
       <div class="logo"><i class="fa-solid fa-wallet"></i></div>
       <h1 data-i18n="title">PayDay</h1>
-      <p class="tagline" data-i18n="description">Manage your monthly salary: save and spend with clarity.</p>
+      <p class="tagline" data-i18n="description">Track your monthly income, deposits and expenses with precision.</p>
       <div class="header-actions">
         <button id="langToggle" class="icon-btn lang-btn" aria-label="Toggle language">AR</button>
         <button id="themeToggle" class="icon-btn" aria-label="Toggle dark mode"><i class="fa-solid fa-moon"></i></button>
@@ -49,14 +49,18 @@
 
     <main class="workspace">
 
-      <!-- Form -->
+      <!-- New transaction form -->
       <section class="card">
+        <h2 class="card-title">
+          <i class="fa-solid fa-file-invoice-dollar"></i>
+          <span data-i18n="newTransaction">New Transaction</span>
+        </h2>
         <form id="actionForm" class="form" autocomplete="off">
           <div class="field">
-            <label for="type" data-i18n="actionType">Action type</label>
+            <label for="type" data-i18n="txnType">Transaction Type</label>
             <select id="type">
-              <option value="save" data-i18n="save">Save (Income)</option>
-              <option value="withdraw" data-i18n="withdraw">Withdraw (Expense)</option>
+              <option value="save" data-i18n="deposit">Deposit (Income)</option>
+              <option value="withdraw" data-i18n="withdrawal">Withdrawal (Expense)</option>
             </select>
           </div>
           <div class="field">
@@ -64,49 +68,77 @@
             <input type="number" id="amount" min="0.01" step="0.01" required placeholder="0.00">
           </div>
           <div class="field">
-            <label for="date" data-i18n="date">Date</label>
+            <label for="date" data-i18n="date">Transaction Date</label>
             <input type="date" id="date" required>
           </div>
           <div class="field field-wide">
-            <label for="note" data-i18n="note">Note (optional)</label>
-            <input type="text" id="note" data-i18n-placeholder="notePlaceholder" placeholder="e.g. Groceries">
+            <label for="note" data-i18n="memo">Description (optional)</label>
+            <input type="text" id="note" data-i18n-placeholder="memoPlaceholder" placeholder="e.g. Electricity bill payment">
           </div>
           <button type="submit" class="btn primary submit">
             <i class="fa-solid fa-check"></i>
-            <span data-i18n="submit">Execute</span>
+            <span data-i18n="submit">Post Transaction</span>
           </button>
         </form>
       </section>
 
-      <!-- Table -->
+      <!-- Transaction ledger -->
       <section class="card">
-        <div class="table-wrap">
+        <div class="table-toolbar">
+          <h2 class="card-title">
+            <i class="fa-solid fa-table-list"></i>
+            <span data-i18n="ledgerTitle">Transaction Ledger</span>
+          </h2>
+          <label class="ro-toggle" for="readOnlyToggle">
+            <input type="checkbox" id="readOnlyToggle">
+            <i class="fa-solid fa-lock"></i>
+            <span data-i18n="readOnly">Read-Only Mode</span>
+          </label>
+        </div>
+
+        <div class="table-wrap" id="tableWrap">
           <table>
             <thead>
               <tr>
-                <th><i class="fa-solid fa-right-left"></i><span data-i18n="colType">Action Type</span></th>
+                <th><i class="fa-solid fa-right-left"></i><span data-i18n="colType">Transaction Type</span></th>
                 <th><i class="fa-solid fa-coins"></i><span data-i18n="colAmount">Amount</span></th>
                 <th><i class="fa-solid fa-calendar-days"></i><span data-i18n="colDate">Date</span></th>
-                <th><i class="fa-solid fa-note-sticky"></i><span data-i18n="colNote">Note</span></th>
-                <th><i class="fa-solid fa-scale-balanced"></i><span data-i18n="colBalance">Remaining Saved Balance</span></th>
+                <th><i class="fa-solid fa-file-lines"></i><span data-i18n="colMemo">Description</span></th>
+                <th><i class="fa-solid fa-scale-balanced"></i><span data-i18n="colBalance">Available Balance</span></th>
                 <th class="col-actions"></th>
               </tr>
             </thead>
             <tbody id="tableBody"></tbody>
           </table>
         </div>
-        <p id="emptyMsg" class="empty" data-i18n="empty">No records yet. Add your first action above.</p>
+        <p id="emptyMsg" class="empty" data-i18n="empty">No transactions recorded yet. Post your first transaction above.</p>
 
         <div class="table-actions">
           <button id="exportBtn" class="btn">
             <i class="fa-solid fa-file-export"></i>
-            <span data-i18n="exportJson">Export JSON</span>
+            <span data-i18n="exportJson">Export Ledger (JSON)</span>
           </button>
           <button id="importBtn" class="btn">
             <i class="fa-solid fa-file-import"></i>
-            <span data-i18n="importJson">Import JSON</span>
+            <span data-i18n="importJson">Import Ledger (JSON)</span>
           </button>
           <input type="file" id="importFile" accept="application/json,.json" hidden>
+        </div>
+      </section>
+
+      <!-- Transaction details (hidden until a ledger row is clicked) -->
+      <section class="card details" id="detailsCard" hidden aria-live="polite">
+        <div class="slip">
+          <div class="details-head">
+            <h2>
+              <i class="fa-solid fa-receipt"></i>
+              <span data-i18n="detailsTitle">Transaction Details</span>
+            </h2>
+            <button type="button" id="detailsClose" class="act-btn details-close" aria-label="Close details" title="Close details">
+              <i class="fa-solid fa-xmark"></i>
+            </button>
+          </div>
+          <div class="details-list" id="detailsList"></div>
         </div>
       </section>
     </main>
@@ -114,7 +146,7 @@
     <!-- Footer -->
     <footer class="footer">
       <!-- Version is written by app.js from APP_VERSION; this text is the no-JS fallback -->
-      <div class="version" id="appVersion" dir="ltr">Version: 1.0.0</div>
+      <div class="version" id="appVersion" dir="ltr">Version: 1.0.2</div>
       <p class="credits">
         <span data-i18n="footerPrefix">Developed with love</span>
         <i class="fa-solid fa-heart"></i>

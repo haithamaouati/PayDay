@@ -1,42 +1,82 @@
-[
-  {
-    "quote": "Do not save what is left after spending, but spend what is left after saving.",
-    "author": "Warren Buffett"
-  },
-  {
-    "quote": "It is not what you earn, but what you keep, that builds true wealth.",
-    "author": "Unknown"
-  },
-  {
-    "quote": "A penny saved is a penny earned.",
-    "author": "Benjamin Franklin"
-  },
-  {
-    "quote": "Never spend your money before you have earned it.",
-    "author": "Thomas Jefferson"
-  },
-  {
-    "quote": "Do not go broke trying to appear rich.",
-    "author": "Unknown"
-  },
-  {
-    "quote": "Saving is not a punishment; it is the pathway to financial freedom.",
-    "author": "Unknown"
-  },
-  {
-    "quote": "Money is a terrible master but an excellent servant.",
-    "author": "P. T. Barnum"
-  },
-  {
-    "quote": "If you buy things you do not need, soon you will have to sell things you need.",
-    "author": "Warren Buffett"
-  },
-  {
-    "quote": "Money looks better in the bank than on your feet.",
-    "author": "Sophia Amoruso"
-  },
-  {
-    "quote": "It's not your salary that makes you rich, it's your spending habits.",
-    "author": "Charles A. Jaffe"
-  }
-]
+{
+  "en": [
+    {
+      "quote": "Do not save what is left after spending, but spend what is left after saving.",
+      "author": "Warren Buffett"
+    },
+    {
+      "quote": "If you buy things you do not need, soon you will have to sell things you need.",
+      "author": "Warren Buffett"
+    },
+    {
+      "quote": "Beware of little expenses; a small leak will sink a great ship.",
+      "author": "Benjamin Franklin"
+    },
+    {
+      "quote": "A penny saved is a penny earned.",
+      "author": "Benjamin Franklin"
+    },
+    {
+      "quote": "Never spend your money before you have earned it.",
+      "author": "Thomas Jefferson"
+    },
+    {
+      "quote": "The habit of saving is itself an education; it fosters every virtue, teaches self-denial, cultivates the sense of order, trains to forethought, and so broadens the mind.",
+      "author": "T. T. Munger"
+    },
+    {
+      "quote": "Wealth consists not in having great possessions, but in having few wants.",
+      "author": "Epictetus"
+    },
+    {
+      "quote": "Money is a terrible master but an excellent servant.",
+      "author": "P. T. Barnum"
+    },
+    {
+      "quote": "You must gain control over your money or the lack of it will forever control you.",
+      "author": "Dave Ramsey"
+    },
+    {
+      "quote": "Frugality includes all the other virtues.",
+      "author": "Cicero"
+    }
+  ],
+  "ar": [
+    {
+      "quote": "القرش الأبيض ينفع في اليوم الأسود.",
+      "author": "مثل عربي"
+    },
+    {
+      "quote": "على قدر لحافك مدّ رجليك.",
+      "author": "مثل عربي"
+    },
+    {
+      "quote": "ما قلّ وكفى خيرٌ مما كثر وألهى.",
+      "author": "مثل عربي"
+    },
+    {
+      "quote": "القناعة كنزٌ لا يفنى.",
+      "author": "مثل عربي"
+    },
+    {
+      "quote": "لا تدّخر ما يتبقى بعد الإنفاق، بل أنفق ما يتبقى بعد الادخار.",
+      "author": "وارن بافيت"
+    },
+    {
+      "quote": "إذا اشتريت ما لا تحتاج إليه، فسرعان ما ستبيع ما تحتاج إليه.",
+      "author": "وارن بافيت"
+    },
+    {
+      "quote": "احذر النفقات الصغيرة؛ فالثقب الصغير قد يُغرق سفينة كبيرة.",
+      "author": "بنيامين فرانكلين"
+    },
+    {
+      "quote": "لا تُنفق مالك قبل أن تكسبه.",
+      "author": "توماس جيفرسون"
+    },
+    {
+      "quote": "الثراء ليس في كثرة الممتلكات، بل في قلة الرغبات.",
+      "author": "إبيكتيتوس"
+    }
+  ]
+}
