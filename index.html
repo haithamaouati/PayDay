@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PayDay</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- Floating dollar-sign background (decorative, non-interactive) -->
+  <div id="bgFx" class="bg-fx" aria-hidden="true"></div>
+
+  <div class="app">
+
+    <!-- Header -->
+    <header class="header">
+      <div class="logo"><i class="fa-solid fa-wallet"></i></div>
+      <h1 data-i18n="title">PayDay</h1>
+      <p class="tagline" data-i18n="description">Manage your monthly salary: save and spend with clarity.</p>
+      <div class="header-actions">
+        <button id="langToggle" class="icon-btn lang-btn" aria-label="Toggle language">AR</button>
+        <button id="themeToggle" class="icon-btn" aria-label="Toggle dark mode"><i class="fa-solid fa-moon"></i></button>
+        <a class="icon-btn" href="https://t.me/haithamaouati" target="_blank" rel="noopener" aria-label="Telegram"><i class="fa-brands fa-telegram"></i></a>
+        <a class="icon-btn" href="https://github.com/haithamaouati" target="_blank" rel="noopener" aria-label="GitHub"><i class="fa-brands fa-github"></i></a>
+      </div>
+    </header>
+
+    <!-- Sub-header: date & time -->
+    <div class="datetime-bar">
+      <i class="fa-regular fa-clock"></i>
+      <span id="datetime"></span>
+    </div>
+
+    <!-- Motivational quote card -->
+    <section class="quote-card" aria-live="polite">
+      <i class="fa-solid fa-quote-left quote-icon" aria-hidden="true"></i>
+      <div class="quote-body" id="quoteBody">
+        <p class="quote-text" id="quoteText">…</p>
+        <p class="quote-author" id="quoteAuthor"></p>
+      </div>
+      <button id="quoteRefresh" class="icon-btn quote-refresh" type="button" aria-label="New quote" title="New quote">
+        <i class="fa-solid fa-rotate"></i>
+      </button>
+    </section>
+
+    <main class="workspace">
+
+      <!-- Form -->
+      <section class="card">
+        <form id="actionForm" class="form" autocomplete="off">
+          <div class="field">
+            <label for="type" data-i18n="actionType">Action type</label>
+            <select id="type">
+              <option value="save" data-i18n="save">Save (Income)</option>
+              <option value="withdraw" data-i18n="withdraw">Withdraw (Expense)</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="amount" data-i18n="amount">Amount (DZD)</label>
+            <input type="number" id="amount" min="0.01" step="0.01" required placeholder="0.00">
+          </div>
+          <div class="field">
+            <label for="date" data-i18n="date">Date</label>
+            <input type="date" id="date" required>
+          </div>
+          <div class="field field-wide">
+            <label for="note" data-i18n="note">Note (optional)</label>
+            <input type="text" id="note" data-i18n-placeholder="notePlaceholder" placeholder="e.g. Groceries">
+          </div>
+          <button type="submit" class="btn primary submit">
+            <i class="fa-solid fa-check"></i>
+            <span data-i18n="submit">Execute</span>
+          </button>
+        </form>
+      </section>
+
+      <!-- Table -->
+      <section class="card">
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th><i class="fa-solid fa-right-left"></i><span data-i18n="colType">Action Type</span></th>
+                <th><i class="fa-solid fa-coins"></i><span data-i18n="colAmount">Amount</span></th>
+                <th><i class="fa-solid fa-calendar-days"></i><span data-i18n="colDate">Date</span></th>
+                <th><i class="fa-solid fa-note-sticky"></i><span data-i18n="colNote">Note</span></th>
+                <th><i class="fa-solid fa-scale-balanced"></i><span data-i18n="colBalance">Remaining Saved Balance</span></th>
+                <th class="col-actions"></th>
+              </tr>
+            </thead>
+            <tbody id="tableBody"></tbody>
+          </table>
+        </div>
+        <p id="emptyMsg" class="empty" data-i18n="empty">No records yet. Add your first action above.</p>
+
+        <div class="table-actions">
+          <button id="exportBtn" class="btn">
+            <i class="fa-solid fa-file-export"></i>
+            <span data-i18n="exportJson">Export JSON</span>
+          </button>
+          <button id="importBtn" class="btn">
+            <i class="fa-solid fa-file-import"></i>
+            <span data-i18n="importJson">Import JSON</span>
+          </button>
+          <input type="file" id="importFile" accept="application/json,.json" hidden>
+        </div>
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <!-- Version is written by app.js from APP_VERSION; this text is the no-JS fallback -->
+      <div class="version" id="appVersion" dir="ltr">Version: 1.0.0</div>
+      <p class="credits">
+        <span data-i18n="footerPrefix">Developed with love</span>
+        <i class="fa-solid fa-heart"></i>
+        <span data-i18n="footerBy">by</span>
+        <a href="https://github.com/haithamaouati" target="_blank" rel="noopener" data-i18n="author">Haitham Aouati</a>
+      </p>
+    </footer>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
