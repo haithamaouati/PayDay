@@ -47,106 +47,284 @@
       </button>
     </section>
 
+    <!-- Section navigation (segmented tabs) -->
+    <nav class="tabs" id="tabs" role="tablist" aria-label="Application sections">
+      <button class="tab active" id="tab-ledger" role="tab" data-tab="ledger" aria-selected="true" aria-controls="panel-ledger" type="button">
+        <i class="fa-solid fa-wallet"></i><span data-i18n="tabLedger">Salary Ledger</span>
+      </button>
+      <button class="tab" id="tab-shopping" role="tab" data-tab="shopping" aria-selected="false" aria-controls="panel-shopping" tabindex="-1" type="button">
+        <i class="fa-solid fa-cart-shopping"></i><span data-i18n="tabShopping">Shopping Budget</span>
+      </button>
+      <button class="tab" id="tab-debts" role="tab" data-tab="debts" aria-selected="false" aria-controls="panel-debts" tabindex="-1" type="button">
+        <i class="fa-solid fa-hand-holding-dollar"></i><span data-i18n="tabDebts">Debt Tracker</span>
+      </button>
+    </nav>
+
     <main class="workspace">
 
-      <!-- New transaction form -->
-      <section class="card">
-        <h2 class="card-title">
-          <i class="fa-solid fa-file-invoice-dollar"></i>
-          <span data-i18n="newTransaction">New Transaction</span>
-        </h2>
-        <form id="actionForm" class="form" autocomplete="off">
-          <div class="field">
-            <label for="type" data-i18n="txnType">Transaction Type</label>
-            <select id="type">
-              <option value="save" data-i18n="deposit">Deposit (Income)</option>
-              <option value="withdraw" data-i18n="withdrawal">Withdrawal (Expense)</option>
-            </select>
-          </div>
-          <div class="field">
-            <label for="amount" data-i18n="amount">Amount (DZD)</label>
-            <input type="number" id="amount" min="0.01" step="0.01" required placeholder="0.00">
-          </div>
-          <div class="field">
-            <label for="date" data-i18n="date">Transaction Date</label>
-            <input type="date" id="date" required>
-          </div>
-          <div class="field field-wide">
-            <label for="note" data-i18n="memo">Description (optional)</label>
-            <input type="text" id="note" data-i18n-placeholder="memoPlaceholder" placeholder="e.g. Electricity bill payment">
-          </div>
-          <button type="submit" class="btn primary submit">
-            <i class="fa-solid fa-check"></i>
-            <span data-i18n="submit">Post Transaction</span>
-          </button>
-        </form>
-      </section>
+      <!-- ============ TAB 1: SALARY LEDGER ============ -->
+      <section class="tab-panel" id="panel-ledger" role="tabpanel" aria-labelledby="tab-ledger" data-panel="ledger">
 
-      <!-- Transaction ledger -->
-      <section class="card">
-        <div class="table-toolbar">
+        <!-- New transaction form -->
+        <section class="card">
           <h2 class="card-title">
-            <i class="fa-solid fa-table-list"></i>
-            <span data-i18n="ledgerTitle">Transaction Ledger</span>
+            <i class="fa-solid fa-file-invoice-dollar"></i>
+            <span data-i18n="newTransaction">New Transaction</span>
           </h2>
-          <label class="ro-toggle" for="readOnlyToggle">
-            <input type="checkbox" id="readOnlyToggle">
-            <i class="fa-solid fa-lock"></i>
-            <span data-i18n="readOnly">Read-Only Mode</span>
-          </label>
-        </div>
+          <form id="actionForm" class="form" autocomplete="off">
+            <div class="field">
+              <label for="type" data-i18n="txnType">Transaction Type</label>
+              <select id="type">
+                <option value="save" data-i18n="deposit">Deposit (Income)</option>
+                <option value="withdraw" data-i18n="withdrawal">Withdrawal (Expense)</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="amount" data-i18n="amount">Amount (DZD)</label>
+              <input type="number" id="amount" min="0.01" step="0.01" required placeholder="0.00">
+            </div>
+            <div class="field">
+              <label for="date" data-i18n="date">Transaction Date</label>
+              <input type="date" id="date" required>
+            </div>
+            <div class="field field-wide">
+              <label for="note" data-i18n="memo">Description (optional)</label>
+              <input type="text" id="note" data-i18n-placeholder="memoPlaceholder" placeholder="e.g. Electricity bill payment">
+            </div>
+            <button type="submit" class="btn primary submit">
+              <i class="fa-solid fa-check"></i>
+              <span data-i18n="submit">Post Transaction</span>
+            </button>
+          </form>
+        </section>
 
-        <div class="table-wrap" id="tableWrap">
-          <table>
-            <thead>
-              <tr>
-                <th><i class="fa-solid fa-right-left"></i><span data-i18n="colType">Transaction Type</span></th>
-                <th><i class="fa-solid fa-coins"></i><span data-i18n="colAmount">Amount</span></th>
-                <th><i class="fa-solid fa-calendar-days"></i><span data-i18n="colDate">Date</span></th>
-                <th><i class="fa-solid fa-file-lines"></i><span data-i18n="colMemo">Description</span></th>
-                <th><i class="fa-solid fa-scale-balanced"></i><span data-i18n="colBalance">Available Balance</span></th>
-                <th class="col-actions"></th>
-              </tr>
-            </thead>
-            <tbody id="tableBody"></tbody>
-          </table>
-        </div>
-        <p id="emptyMsg" class="empty" data-i18n="empty">No transactions recorded yet. Post your first transaction above.</p>
+        <!-- Transaction ledger -->
+        <section class="card">
+          <div class="table-toolbar">
+            <h2 class="card-title">
+              <i class="fa-solid fa-table-list"></i>
+              <span data-i18n="ledgerTitle">Transaction Ledger</span>
+            </h2>
+            <label class="ro-toggle" for="readOnlyToggle">
+              <input type="checkbox" id="readOnlyToggle">
+              <i class="fa-solid fa-lock"></i>
+              <span data-i18n="readOnly">Read-Only Mode</span>
+            </label>
+          </div>
 
-        <div class="table-actions">
-          <button id="exportBtn" class="btn">
-            <i class="fa-solid fa-file-export"></i>
-            <span data-i18n="exportJson">Export Ledger (JSON)</span>
-          </button>
-          <button id="importBtn" class="btn">
-            <i class="fa-solid fa-file-import"></i>
-            <span data-i18n="importJson">Import Ledger (JSON)</span>
-          </button>
-          <input type="file" id="importFile" accept="application/json,.json" hidden>
-        </div>
+          <div class="table-wrap" id="tableWrap">
+            <table>
+              <thead>
+                <tr>
+                  <th><i class="fa-solid fa-right-left"></i><span data-i18n="colType">Transaction Type</span></th>
+                  <th><i class="fa-solid fa-coins"></i><span data-i18n="colAmount">Amount</span></th>
+                  <th><i class="fa-solid fa-calendar-days"></i><span data-i18n="colDate">Date</span></th>
+                  <th><i class="fa-solid fa-file-lines"></i><span data-i18n="colMemo">Description</span></th>
+                  <th><i class="fa-solid fa-scale-balanced"></i><span data-i18n="colBalance">Available Balance</span></th>
+                  <th class="col-actions"></th>
+                </tr>
+              </thead>
+              <tbody id="tableBody"></tbody>
+            </table>
+          </div>
+          <p id="emptyMsg" class="empty" data-i18n="empty">No transactions recorded yet. Post your first transaction above.</p>
+
+          <div class="table-actions">
+            <button id="exportBtn" class="btn">
+              <i class="fa-solid fa-file-export"></i>
+              <span data-i18n="exportJson">Export Ledger (JSON)</span>
+            </button>
+            <button id="importBtn" class="btn">
+              <i class="fa-solid fa-file-import"></i>
+              <span data-i18n="importJson">Import Ledger (JSON)</span>
+            </button>
+            <input type="file" id="importFile" accept="application/json,.json" hidden>
+          </div>
+        </section>
+
+        <!-- Transaction details (hidden until a ledger row is clicked) -->
+        <section class="card details" id="detailsCard" hidden aria-live="polite">
+          <div class="slip">
+            <div class="details-head">
+              <h2>
+                <i class="fa-solid fa-receipt"></i>
+                <span data-i18n="detailsTitle">Transaction Details</span>
+              </h2>
+              <button type="button" id="detailsClose" class="act-btn details-close" aria-label="Close details" title="Close details">
+                <i class="fa-solid fa-xmark"></i>
+              </button>
+            </div>
+            <div class="details-list" id="detailsList"></div>
+          </div>
+        </section>
       </section>
 
-      <!-- Transaction details (hidden until a ledger row is clicked) -->
-      <section class="card details" id="detailsCard" hidden aria-live="polite">
-        <div class="slip">
-          <div class="details-head">
-            <h2>
-              <i class="fa-solid fa-receipt"></i>
-              <span data-i18n="detailsTitle">Transaction Details</span>
-            </h2>
-            <button type="button" id="detailsClose" class="act-btn details-close" aria-label="Close details" title="Close details">
-              <i class="fa-solid fa-xmark"></i>
-            </button>
+      <!-- ============ TAB 2: SHOPPING BUDGET ============ -->
+      <section class="tab-panel" id="panel-shopping" role="tabpanel" aria-labelledby="tab-shopping" data-panel="shopping" hidden>
+
+        <!-- Budget + summary -->
+        <section class="card">
+          <h2 class="card-title">
+            <i class="fa-solid fa-sack-dollar"></i>
+            <span data-i18n="shopBudgetTitle">Purchase Budget</span>
+          </h2>
+
+          <div class="field budget-field">
+            <label for="shopBudget" data-i18n="shopBudgetLabel">Allocated Budget (DZD)</label>
+            <input type="number" id="shopBudget" min="0" step="0.01" placeholder="0.00">
           </div>
-          <div class="details-list" id="detailsList"></div>
-        </div>
+
+          <div class="summary-grid">
+            <div class="stat">
+              <div class="stat-icon red"><i class="fa-solid fa-bag-shopping"></i></div>
+              <div class="stat-body">
+                <span class="stat-label" data-i18n="statSpent">Total Expenditure</span>
+                <strong class="stat-value red" id="shopSpent">0.00</strong>
+              </div>
+            </div>
+            <div class="stat">
+              <div class="stat-icon yellow"><i class="fa-solid fa-piggy-bank"></i></div>
+              <div class="stat-body">
+                <span class="stat-label" data-i18n="statRemaining">Remaining Allowance</span>
+                <strong class="stat-value yellow" id="shopRemaining">—</strong>
+              </div>
+            </div>
+            <div class="stat">
+              <div class="stat-icon"><i class="fa-solid fa-hourglass-half"></i></div>
+              <div class="stat-body">
+                <span class="stat-label" data-i18n="statPending">Pending Estimates</span>
+                <strong class="stat-value" id="shopPending">0.00</strong>
+              </div>
+            </div>
+          </div>
+
+          <div class="progress" aria-hidden="true"><div class="progress-bar" id="shopBar"></div></div>
+          <div class="progress-meta">
+            <span id="shopUsed"></span>
+            <span class="pill" id="shopStatus"></span>
+          </div>
+        </section>
+
+        <!-- New purchase item -->
+        <section class="card">
+          <h2 class="card-title">
+            <i class="fa-solid fa-cart-plus"></i>
+            <span data-i18n="shopFormTitle">New Purchase Item</span>
+          </h2>
+          <form id="shopForm" class="form" autocomplete="off">
+            <div class="field field-wide">
+              <label for="shopName" data-i18n="shopItem">Item Description</label>
+              <input type="text" id="shopName" maxlength="120" required data-i18n-placeholder="shopItemPlaceholder" placeholder="e.g. Monthly groceries">
+            </div>
+            <div class="field">
+              <label for="shopCost" data-i18n="shopCost">Estimated Cost (DZD)</label>
+              <input type="number" id="shopCost" min="0.01" step="0.01" required placeholder="0.00">
+            </div>
+            <div class="field">
+              <label for="shopDate" data-i18n="shopDate">Purchase Date</label>
+              <input type="date" id="shopDate" required>
+            </div>
+            <button type="submit" class="btn primary submit">
+              <i class="fa-solid fa-plus"></i>
+              <span data-i18n="shopAdd">Add Item</span>
+            </button>
+          </form>
+        </section>
+
+        <!-- Shopping list -->
+        <section class="card">
+          <h2 class="card-title">
+            <i class="fa-solid fa-list-check"></i>
+            <span data-i18n="shopListTitle">Shopping List</span>
+          </h2>
+          <ul class="entry-list" id="shopList"></ul>
+          <p class="empty" id="shopEmpty" data-i18n="shopEmpty">No purchase items yet. Add your first item above.</p>
+        </section>
+      </section>
+
+      <!-- ============ TAB 3: DEBT TRACKER ============ -->
+      <section class="tab-panel" id="panel-debts" role="tabpanel" aria-labelledby="tab-debts" data-panel="debts" hidden>
+
+        <!-- Summary -->
+        <section class="card">
+          <h2 class="card-title">
+            <i class="fa-solid fa-chart-pie"></i>
+            <span data-i18n="debtOverviewTitle">Debt Overview</span>
+          </h2>
+
+          <div class="summary-grid">
+            <div class="stat">
+              <div class="stat-icon red"><i class="fa-solid fa-file-invoice-dollar"></i></div>
+              <div class="stat-body">
+                <span class="stat-label" data-i18n="statDebtTotal">Total Outstanding Liabilities</span>
+                <strong class="stat-value red" id="debtTotal">0.00</strong>
+              </div>
+            </div>
+            <div class="stat">
+              <div class="stat-icon yellow"><i class="fa-solid fa-scale-unbalanced"></i></div>
+              <div class="stat-body">
+                <span class="stat-label" data-i18n="statDebtUnsettled">Unsettled Balance</span>
+                <strong class="stat-value yellow" id="debtUnsettled">0.00</strong>
+              </div>
+            </div>
+            <div class="stat">
+              <div class="stat-icon green"><i class="fa-solid fa-circle-check"></i></div>
+              <div class="stat-body">
+                <span class="stat-label" data-i18n="statDebtSettled">Settled Amount</span>
+                <strong class="stat-value green" id="debtSettled">0.00</strong>
+              </div>
+            </div>
+          </div>
+
+          <div class="progress" aria-hidden="true"><div class="progress-bar" id="debtBar"></div></div>
+          <div class="progress-meta">
+            <span id="debtPct"></span>
+            <span class="pill" id="debtStatus"></span>
+          </div>
+        </section>
+
+        <!-- New liability -->
+        <section class="card">
+          <h2 class="card-title">
+            <i class="fa-solid fa-file-signature"></i>
+            <span data-i18n="debtFormTitle">New Liability</span>
+          </h2>
+          <form id="debtForm" class="form" autocomplete="off">
+            <div class="field field-wide">
+              <label for="debtCreditor" data-i18n="debtCreditor">Creditor Name</label>
+              <input type="text" id="debtCreditor" maxlength="80" required data-i18n-placeholder="debtCreditorPlaceholder" placeholder="e.g. Ahmed B.">
+            </div>
+            <div class="field">
+              <label for="debtAmount" data-i18n="debtAmount">Principal Amount (DZD)</label>
+              <input type="number" id="debtAmount" min="0.01" step="0.01" required placeholder="0.00">
+            </div>
+            <div class="field">
+              <label for="debtDate" data-i18n="debtDate">Due/Settlement Date</label>
+              <input type="date" id="debtDate" required>
+            </div>
+            <button type="submit" class="btn primary submit">
+              <i class="fa-solid fa-plus"></i>
+              <span data-i18n="debtAdd">Record Liability</span>
+            </button>
+          </form>
+        </section>
+
+        <!-- Debt register -->
+        <section class="card">
+          <h2 class="card-title">
+            <i class="fa-solid fa-book"></i>
+            <span data-i18n="debtListTitle">Debt & Liabilities</span>
+          </h2>
+          <ul class="entry-list" id="debtList"></ul>
+          <p class="empty" id="debtEmpty" data-i18n="debtEmpty">No liabilities recorded. Your debt register is clear.</p>
+        </section>
       </section>
     </main>
 
     <!-- Footer -->
     <footer class="footer">
       <!-- Version is written by app.js from APP_VERSION; this text is the no-JS fallback -->
-      <div class="version" id="appVersion" dir="ltr">Version: 1.0.2</div>
+      <div class="version" id="appVersion" dir="ltr">Version: 1.1.0</div>
       <p class="credits">
         <span data-i18n="footerPrefix">Developed with love</span>
         <i class="fa-solid fa-heart"></i>

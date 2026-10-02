@@ -6,13 +6,19 @@
      MINOR: new features that are backwards compatible
      PATCH: backwards-compatible fixes and polish (e.g. wording, styling)
      Update only this constant; the footer renders it automatically. */
-  const APP_VERSION = "1.0.2";
+  const APP_VERSION = "1.1.0";
 
   const STORAGE_KEY = "payday_records";
   const LANG_KEY = "payday_lang";
   const THEME_KEY = "payday_theme";
   const READONLY_KEY = "payday_readonly";
+  const TAB_KEY = "payday_tab";
+  const SHOP_BUDGET_KEY = "payday_shop_budget";
+  const SHOP_ITEMS_KEY = "payday_shop_items";
+  const DEBTS_KEY = "payday_debts";
   const QUOTES_URL = "quotes.json";
+
+  const TABS = ["ledger", "shopping", "debts"];
 
   // Used per language only if quotes.json cannot be loaded (e.g. opened via file://)
   const FALLBACK_QUOTES = {
@@ -29,13 +35,21 @@
   };
 
   /* ---------- Translations (FinTech terminology) ----------
-     Note: the stored record types remain "save" / "withdraw" internally so
+     Note: ledger record types remain "save" / "withdraw" internally so
      existing localStorage data and exported JSON files stay compatible.
      They are displayed as "Deposit" / "Withdrawal". */
   const i18n = {
     en: {
       title: "PayDay",
       description: "Track your monthly income, deposits and expenses with precision.",
+
+      // Tabs
+      tabsLabel: "Application sections",
+      tabLedger: "Salary Ledger",
+      tabShopping: "Shopping Budget",
+      tabDebts: "Debt Tracker",
+
+      // Salary ledger
       newTransaction: "New Transaction",
       txnType: "Transaction Type",
       deposit: "Deposit (Income)",
@@ -54,12 +68,8 @@
       empty: "No transactions recorded yet. Post your first transaction above.",
       exportJson: "Export Ledger (JSON)",
       importJson: "Import Ledger (JSON)",
-      footerPrefix: "Developed with love",
-      footerBy: "by",
-      author: "Haitham Aouati",
       depositLabel: "Deposit",
       withdrawalLabel: "Withdrawal",
-      currency: "DZD",
       confirmDelete: "Delete this transaction? This action cannot be undone.",
       importOk: "Ledger imported successfully.",
       importErr: "Import failed: the selected file is not a valid JSON ledger.",
@@ -69,18 +79,83 @@
       saveChanges: "Save changes",
       cancel: "Discard changes",
       del: "Delete transaction",
-      newQuote: "New quote",
-      quoteLoading: "Loading…",
       readOnly: "Read-Only Mode",
       detailsTitle: "Transaction Details",
       closeDetails: "Close details",
       openingBalance: "Opening Balance",
       txnAmount: "Transaction Amount",
-      closingBalance: "Closing Balance"
+      closingBalance: "Closing Balance",
+
+      // Shopping budget
+      shopBudgetTitle: "Purchase Budget",
+      shopBudgetLabel: "Allocated Budget (DZD)",
+      statSpent: "Total Expenditure",
+      statRemaining: "Remaining Allowance",
+      statPending: "Pending Estimates",
+      shopFormTitle: "New Purchase Item",
+      shopItem: "Item Description",
+      shopItemPlaceholder: "e.g. Monthly groceries",
+      shopCost: "Estimated Cost (DZD)",
+      shopDate: "Purchase Date",
+      shopAdd: "Add Item",
+      shopListTitle: "Shopping List",
+      shopEmpty: "No purchase items yet. Add your first item above.",
+      purchased: "Purchased",
+      pending: "Pending",
+      markPurchased: "Mark as purchased",
+      markPending: "Mark as pending",
+      deleteItem: "Delete item",
+      confirmDeleteItem: "Delete this item from the shopping list?",
+      invalidItem: "Please enter an item description.",
+      budgetUsed: "{n}% of budget used",
+      budgetNone: "No budget set",
+      budgetOk: "Within budget",
+      budgetOver: "Over budget",
+
+      // Debt tracker
+      debtOverviewTitle: "Debt Overview",
+      statDebtTotal: "Total Outstanding Liabilities",
+      statDebtUnsettled: "Unsettled Balance",
+      statDebtSettled: "Settled Amount",
+      debtFormTitle: "New Liability",
+      debtCreditor: "Creditor Name",
+      debtCreditorPlaceholder: "e.g. Ahmed B.",
+      debtAmount: "Principal Amount (DZD)",
+      debtDate: "Due/Settlement Date",
+      debtAdd: "Record Liability",
+      debtListTitle: "Debt & Liabilities",
+      debtEmpty: "No liabilities recorded. Your debt register is clear.",
+      settled: "Settled",
+      unsettled: "Unsettled",
+      markSettled: "Mark as settled",
+      markUnsettled: "Mark as unsettled",
+      deleteDebt: "Delete liability",
+      confirmDeleteDebt: "Delete this liability record? This action cannot be undone.",
+      invalidCreditor: "Please enter the creditor name.",
+      debtSettledPct: "{n}% of liabilities settled",
+      debtStatusNone: "No liabilities",
+      debtStatusOpen: "Outstanding",
+      debtStatusClear: "Fully settled",
+
+      // Shared
+      currency: "DZD",
+      newQuote: "New quote",
+      quoteLoading: "Loading…",
+      footerPrefix: "Developed with love",
+      footerBy: "by",
+      author: "Haitham Aouati"
     },
     ar: {
       title: "يوم الراتب",
       description: "تتبّع دخلك الشهري وإيداعاتك ومصروفاتك بدقة.",
+
+      // Tabs
+      tabsLabel: "أقسام التطبيق",
+      tabLedger: "سجل الراتب",
+      tabShopping: "ميزانية التسوق",
+      tabDebts: "سجل الديون",
+
+      // Salary ledger
       newTransaction: "معاملة جديدة",
       txnType: "نوع المعاملة",
       deposit: "إيداع (دخل)",
@@ -99,12 +174,8 @@
       empty: "لا توجد معاملات مسجّلة بعد. سجّل أول معاملة من الأعلى.",
       exportJson: "تصدير السجل (JSON)",
       importJson: "استيراد السجل (JSON)",
-      footerPrefix: "طُوِّر بكل حب",
-      footerBy: "بواسطة",
-      author: "هيثم عواطي",
       depositLabel: "إيداع",
       withdrawalLabel: "سحب",
-      currency: "دج",
       confirmDelete: "هل تريد حذف هذه المعاملة؟ لا يمكن التراجع عن هذا الإجراء.",
       importOk: "تم استيراد السجل بنجاح.",
       importErr: "فشل الاستيراد: الملف المحدد ليس سجلًا بصيغة JSON صالحة.",
@@ -114,26 +185,148 @@
       saveChanges: "حفظ التعديلات",
       cancel: "تجاهل التعديلات",
       del: "حذف المعاملة",
-      newQuote: "اقتباس جديد",
-      quoteLoading: "جارٍ التحميل…",
       readOnly: "وضع القراءة فقط",
       detailsTitle: "تفاصيل المعاملة",
       closeDetails: "إغلاق التفاصيل",
       openingBalance: "رصيد الافتتاح",
       txnAmount: "مبلغ المعاملة",
-      closingBalance: "رصيد الإغلاق"
+      closingBalance: "رصيد الإغلاق",
+
+      // Shopping budget
+      shopBudgetTitle: "ميزانية التسوق",
+      shopBudgetLabel: "الميزانية المخصصة للتسوق (دج)",
+      statSpent: "إجمالي المشتريات",
+      statRemaining: "المتبقي من الميزانية",
+      statPending: "التكاليف المقدرة المعلّقة",
+      shopFormTitle: "سلعة جديدة",
+      shopItem: "بيان السلعة",
+      shopItemPlaceholder: "مثال: مواد غذائية شهرية",
+      shopCost: "التكلفة المقدرة (دج)",
+      shopDate: "تاريخ الشراء",
+      shopAdd: "إضافة سلعة",
+      shopListTitle: "قائمة المشتريات",
+      shopEmpty: "لا توجد سلع بعد. أضف أول سلعة من الأعلى.",
+      purchased: "تم الشراء",
+      pending: "قيد الشراء",
+      markPurchased: "تحديد كمُشتراة",
+      markPending: "إعادة إلى قيد الشراء",
+      deleteItem: "حذف السلعة",
+      confirmDeleteItem: "هل تريد حذف هذه السلعة من قائمة المشتريات؟",
+      invalidItem: "الرجاء إدخال بيان السلعة.",
+      budgetUsed: "تم استهلاك {n}% من الميزانية",
+      budgetNone: "لم تُحدَّد ميزانية",
+      budgetOk: "ضمن الميزانية",
+      budgetOver: "تجاوز الميزانية",
+
+      // Debt tracker
+      debtOverviewTitle: "نظرة عامة على الديون",
+      statDebtTotal: "إجمالي المديونية",
+      statDebtUnsettled: "الرصيد المتبقي للسداد",
+      statDebtSettled: "المبلغ المسدَّد",
+      debtFormTitle: "التزام جديد",
+      debtCreditor: "اسم الدائن",
+      debtCreditorPlaceholder: "مثال: أحمد ب.",
+      debtAmount: "قيمة الدين (دج)",
+      debtDate: "تاريخ الاستحقاق/السداد",
+      debtAdd: "تسجيل الالتزام",
+      debtListTitle: "سجل الديون والالتزامات",
+      debtEmpty: "لا توجد التزامات مسجّلة. سجل الديون فارغ.",
+      settled: "مسدَّد",
+      unsettled: "غير مسدَّد",
+      markSettled: "تحديد كمسدَّد",
+      markUnsettled: "إعادة إلى غير مسدَّد",
+      deleteDebt: "حذف الالتزام",
+      confirmDeleteDebt: "هل تريد حذف سجل هذا الالتزام؟ لا يمكن التراجع عن هذا الإجراء.",
+      invalidCreditor: "الرجاء إدخال اسم الدائن.",
+      debtSettledPct: "تم سداد {n}% من الالتزامات",
+      debtStatusNone: "لا توجد التزامات",
+      debtStatusOpen: "قيد السداد",
+      debtStatusClear: "مسدَّدة بالكامل",
+
+      // Shared
+      currency: "دج",
+      newQuote: "اقتباس جديد",
+      quoteLoading: "جارٍ التحميل…",
+      footerPrefix: "طُوِّر بكل حب",
+      footerBy: "بواسطة",
+      author: "هيثم أواتي"
     }
   };
+
+  /* ---------- Storage helpers ---------- */
+  function readJSON(key) {
+    try { return JSON.parse(localStorage.getItem(key)); } catch { return null; }
+  }
+  function writeJSON(key, value) {
+    localStorage.setItem(key, JSON.stringify(value));
+  }
+
+  const ISO_DATE = /^\d{4}-\d{2}-\d{2}$/;
+  const round2 = (n) => Math.round(n * 100) / 100;
+
+  let seq = 0;
+  const uid = () => Date.now() * 1000 + (seq++ % 1000);
+
+  function loadRecords() {
+    const data = readJSON(STORAGE_KEY);
+    return Array.isArray(data) ? data : [];
+  }
+
+  function loadShopItems() {
+    const data = readJSON(SHOP_ITEMS_KEY);
+    if (!Array.isArray(data)) return [];
+    return data
+      .filter((x) => x && typeof x.name === "string" && x.name.trim() &&
+        isFinite(Number(x.cost)) && Number(x.cost) > 0 && ISO_DATE.test(x.date))
+      .map((x, i) => ({
+        id: isFinite(Number(x.id)) ? Number(x.id) : uid() + i,
+        name: x.name.trim(),
+        cost: Number(x.cost),
+        date: x.date,
+        done: !!x.done
+      }));
+  }
+
+  function loadDebts() {
+    const data = readJSON(DEBTS_KEY);
+    if (!Array.isArray(data)) return [];
+    return data
+      .filter((x) => x && typeof x.creditor === "string" && x.creditor.trim() &&
+        isFinite(Number(x.amount)) && Number(x.amount) > 0 && ISO_DATE.test(x.date))
+      .map((x, i) => ({
+        id: isFinite(Number(x.id)) ? Number(x.id) : uid() + i,
+        creditor: x.creditor.trim(),
+        amount: Number(x.amount),
+        date: x.date,
+        settled: !!x.settled
+      }));
+  }
+
+  function loadBudget() {
+    const v = parseFloat(localStorage.getItem(SHOP_BUDGET_KEY));
+    return isFinite(v) && v > 0 ? round2(v) : 0;
+  }
 
   /* ---------- State ---------- */
   let lang = localStorage.getItem(LANG_KEY) === "ar" ? "ar" : "en";
   let theme = localStorage.getItem(THEME_KEY) ||
     (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+  let activeTab = TABS.includes(localStorage.getItem(TAB_KEY)) ? localStorage.getItem(TAB_KEY) : "ledger";
+
+  // Salary ledger
   let records = loadRecords();
   let editingId = null;
   let selectedId = null;                       // row shown in the details card
   let readOnly = localStorage.getItem(READONLY_KEY) === "1";
 
+  // Shopping budget
+  let shopBudget = loadBudget();
+  let shopItems = loadShopItems();
+
+  // Debt tracker
+  let debts = loadDebts();
+
+  // Quotes
   let quotes = { en: [], ar: [] };
   let lastQuoteIndex = { en: -1, ar: -1 };
   let quotesReady = false;
@@ -141,6 +334,23 @@
 
   /* ---------- Elements ---------- */
   const $ = (id) => document.getElementById(id);
+
+  // Shared / header
+  const datetimeEl = $("datetime");
+  const langBtn = $("langToggle");
+  const themeBtn = $("themeToggle");
+  const versionEl = $("appVersion");
+  const quoteBody = $("quoteBody");
+  const quoteTextEl = $("quoteText");
+  const quoteAuthorEl = $("quoteAuthor");
+  const quoteRefreshBtn = $("quoteRefresh");
+
+  // Tabs
+  const tabsEl = $("tabs");
+  const tabBtns = Array.from(document.querySelectorAll(".tab"));
+  const panels = Array.from(document.querySelectorAll(".tab-panel"));
+
+  // Ledger
   const form = $("actionForm");
   const typeEl = $("type");
   const amountEl = $("amount");
@@ -149,33 +359,41 @@
   const tbody = $("tableBody");
   const tableWrap = $("tableWrap");
   const emptyMsg = $("emptyMsg");
-  const datetimeEl = $("datetime");
-  const langBtn = $("langToggle");
-  const themeBtn = $("themeToggle");
   const importBtn = $("importBtn");
   const importFile = $("importFile");
   const readOnlyToggle = $("readOnlyToggle");
   const detailsCard = $("detailsCard");
   const detailsList = $("detailsList");
   const detailsClose = $("detailsClose");
-  const quoteBody = $("quoteBody");
-  const quoteTextEl = $("quoteText");
-  const quoteAuthorEl = $("quoteAuthor");
-  const quoteRefreshBtn = $("quoteRefresh");
-  const versionEl = $("appVersion");
 
-  /* ---------- Storage ---------- */
-  function loadRecords() {
-    try {
-      const data = JSON.parse(localStorage.getItem(STORAGE_KEY));
-      return Array.isArray(data) ? data : [];
-    } catch {
-      return [];
-    }
-  }
-  function persist() {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(records));
-  }
+  // Shopping
+  const shopForm = $("shopForm");
+  const shopBudgetEl = $("shopBudget");
+  const shopNameEl = $("shopName");
+  const shopCostEl = $("shopCost");
+  const shopDateEl = $("shopDate");
+  const shopList = $("shopList");
+  const shopEmpty = $("shopEmpty");
+  const shopSpentEl = $("shopSpent");
+  const shopRemainingEl = $("shopRemaining");
+  const shopPendingEl = $("shopPending");
+  const shopBar = $("shopBar");
+  const shopUsedEl = $("shopUsed");
+  const shopStatusEl = $("shopStatus");
+
+  // Debts
+  const debtForm = $("debtForm");
+  const debtCreditorEl = $("debtCreditor");
+  const debtAmountEl = $("debtAmount");
+  const debtDateEl = $("debtDate");
+  const debtList = $("debtList");
+  const debtEmpty = $("debtEmpty");
+  const debtTotalEl = $("debtTotal");
+  const debtUnsettledEl = $("debtUnsettled");
+  const debtSettledEl = $("debtSettled");
+  const debtBar = $("debtBar");
+  const debtPctEl = $("debtPct");
+  const debtStatusEl = $("debtStatus");
 
   /* ---------- Helpers ---------- */
   const t = (key) => i18n[lang][key];
@@ -223,6 +441,43 @@
     const semver = /^\d+\.\d+\.\d+$/;
     versionEl.textContent = "Version: " + (semver.test(APP_VERSION) ? APP_VERSION : "0.0.0");
   }
+
+  /* ---------- Tabs ---------- */
+  function setTab(name, focusTab) {
+    if (!TABS.includes(name)) name = "ledger";
+    activeTab = name;
+    localStorage.setItem(TAB_KEY, name);
+
+    tabBtns.forEach((btn) => {
+      const on = btn.dataset.tab === name;
+      btn.classList.toggle("active", on);
+      btn.setAttribute("aria-selected", on ? "true" : "false");
+      btn.tabIndex = on ? 0 : -1;
+      if (on && focusTab) btn.focus();
+    });
+    panels.forEach((p) => { p.hidden = p.dataset.panel !== name; });
+  }
+
+  tabsEl.addEventListener("click", (e) => {
+    const btn = e.target.closest(".tab");
+    if (btn) setTab(btn.dataset.tab, false);
+  });
+
+  // Keyboard navigation (arrow keys follow the visual order, so they flip in RTL)
+  tabsEl.addEventListener("keydown", (e) => {
+    const idx = TABS.indexOf(activeTab);
+    const rtl = document.documentElement.dir === "rtl";
+    let next = null;
+
+    if (e.key === "ArrowRight") next = idx + (rtl ? -1 : 1);
+    else if (e.key === "ArrowLeft") next = idx + (rtl ? 1 : -1);
+    else if (e.key === "Home") next = 0;
+    else if (e.key === "End") next = TABS.length - 1;
+    if (next === null) return;
+
+    e.preventDefault();
+    setTab(TABS[(next + TABS.length) % TABS.length], true);
+  });
 
   /* ---------- Quotes (bilingual) ---------- */
   function isValidQuote(q) {
@@ -295,7 +550,13 @@
 
   quoteRefreshBtn.addEventListener("click", () => showQuote(true));
 
-  /* ---------- Data helpers ---------- */
+  /* =====================================================================
+     SALARY LEDGER
+     ===================================================================== */
+  function persist() {
+    writeJSON(STORAGE_KEY, records);
+  }
+
   function sortedRecords() {
     // Chronological: by date, then by creation order (id)
     return [...records].sort((a, b) =>
@@ -314,7 +575,6 @@
     return null;
   }
 
-  /* ---------- Rendering ---------- */
   function viewRowHTML(r, balance) {
     const isDeposit = r.type === "save";
     const hint = readOnly ? t("rowHintView") : t("rowHintEdit");
@@ -409,50 +669,6 @@
     detailsCard.hidden = false;
   }
 
-  function renderDateTime() {
-    datetimeEl.textContent = new Intl.DateTimeFormat(locale(), {
-      weekday: "long", year: "numeric", month: "long", day: "numeric",
-      hour: "2-digit", minute: "2-digit", second: "2-digit"
-    }).format(new Date());
-  }
-
-  function applyLanguage() {
-    document.documentElement.lang = lang;
-    document.documentElement.dir = lang === "ar" ? "rtl" : "ltr";
-    document.title = t("title");
-
-    document.querySelectorAll("[data-i18n]").forEach((el) => {
-      el.textContent = t(el.dataset.i18n);
-    });
-    document.querySelectorAll("[data-i18n-placeholder]").forEach((el) => {
-      el.placeholder = t(el.dataset.i18nPlaceholder);
-    });
-
-    quoteRefreshBtn.setAttribute("aria-label", t("newQuote"));
-    quoteRefreshBtn.title = t("newQuote");
-    detailsClose.setAttribute("aria-label", t("closeDetails"));
-    detailsClose.title = t("closeDetails");
-    if (!quotesReady) quoteTextEl.textContent = t("quoteLoading");
-
-    langBtn.textContent = lang === "ar" ? "EN" : "AR";
-    renderTable();      // also re-renders the details card in the new language
-    renderDateTime();
-  }
-
-  function applyTheme() {
-    document.documentElement.setAttribute("data-theme", theme);
-    themeBtn.innerHTML = theme === "dark"
-      ? '<i class="fa-solid fa-sun"></i>'
-      : '<i class="fa-solid fa-moon"></i>';
-  }
-
-  function applyReadOnly() {
-    readOnlyToggle.checked = readOnly;
-    tableWrap.classList.toggle("is-readonly", readOnly);
-    importBtn.disabled = readOnly;     // importing replaces the whole ledger, so it is locked too
-  }
-
-  /* ---------- Row selection & inline editing ---------- */
   // Clicking a row always shows its details; outside read-only mode it also opens the editor
   function openRow(id, viaKeyboard) {
     selectedId = id;
@@ -490,7 +706,7 @@
     const rec = records.find((r) => r.id === editingId);
     if (rec) {
       rec.type = row.querySelector(".edit-type").value;
-      rec.amount = Math.round(amount * 100) / 100;
+      rec.amount = round2(amount);
       rec.date = row.querySelector(".edit-date").value || rec.date;
       rec.note = row.querySelector(".edit-note").value.trim();
       persist();
@@ -499,7 +715,6 @@
     renderTable();       // details card refreshes with the updated values
   }
 
-  /* ---------- Events ---------- */
   form.addEventListener("submit", (e) => {
     e.preventDefault();
     const amount = parseFloat(amountEl.value);
@@ -510,7 +725,7 @@
     records.push({
       id: Date.now() + Math.floor(Math.random() * 1000),
       type: typeEl.value,
-      amount: Math.round(amount * 100) / 100,
+      amount: round2(amount),
       date: dateEl.value || todayISO(),
       note: noteEl.value.trim()
     });
@@ -572,18 +787,11 @@
     renderTable();
   });
 
-  langBtn.addEventListener("click", () => {
-    lang = lang === "ar" ? "en" : "ar";
-    localStorage.setItem(LANG_KEY, lang);
-    applyLanguage();
-    showQuote(true);                     // new quote in the newly selected language
-  });
-
-  themeBtn.addEventListener("click", () => {
-    theme = theme === "dark" ? "light" : "dark";
-    localStorage.setItem(THEME_KEY, theme);
-    applyTheme();
-  });
+  function applyReadOnly() {
+    readOnlyToggle.checked = readOnly;
+    tableWrap.classList.toggle("is-readonly", readOnly);
+    importBtn.disabled = readOnly;     // importing replaces the whole ledger, so it is locked too
+  }
 
   // Export: file named with the current export date (YYYY-MM-DD.json)
   $("exportBtn").addEventListener("click", () => {
@@ -600,7 +808,6 @@
     URL.revokeObjectURL(url);
   });
 
-  // Import
   importBtn.addEventListener("click", () => {
     if (!readOnly) importFile.click();
   });
@@ -618,7 +825,7 @@
           .filter((r) =>
             r && (r.type === "save" || r.type === "withdraw") &&
             isFinite(Number(r.amount)) && Number(r.amount) > 0 &&
-            /^\d{4}-\d{2}-\d{2}$/.test(r.date))
+            ISO_DATE.test(r.date))
           .map((r, i) => ({
             id: Date.now() + i,
             type: r.type,
@@ -638,6 +845,296 @@
       importFile.value = "";
     };
     reader.readAsText(file);
+  });
+
+  /* =====================================================================
+     SHARED ENTRY RENDERER (shopping items + debts)
+     ===================================================================== */
+  function pill(cls, icon, text) {
+    return `<span class="pill ${cls}"><i class="fa-solid ${icon}"></i>${text}</span>`;
+  }
+
+  function entryHTML(o) {
+    return `
+      <li class="entry${o.done ? " done" : ""}">
+        <button type="button" class="toggle-btn" data-action="toggle" data-id="${o.id}"
+          aria-pressed="${o.done ? "true" : "false"}"
+          aria-label="${esc(o.toggleLabel)}" title="${esc(o.toggleLabel)}">
+          <i class="fa-solid fa-check"></i>
+        </button>
+        <div class="entry-main">
+          <span class="entry-title">${esc(o.title)}</span>
+          <span class="entry-meta">
+            <span class="meta-date"><i class="fa-regular fa-calendar"></i>${formatDate(o.date)}</span>
+            ${o.badge}
+          </span>
+        </div>
+        <span class="entry-amount ${o.amountClass}">${formatMoney(o.amount)}</span>
+        <button type="button" class="act-btn del-btn" data-action="delete" data-id="${o.id}"
+          aria-label="${esc(o.deleteLabel)}" title="${esc(o.deleteLabel)}">
+          <i class="fa-solid fa-trash"></i>
+        </button>
+      </li>`;
+  }
+
+  /* =====================================================================
+     SHOPPING BUDGET
+     ===================================================================== */
+  function persistShop() {
+    writeJSON(SHOP_ITEMS_KEY, shopItems);
+  }
+
+  function renderShopping() {
+    const spent = round2(shopItems.reduce((s, x) => x.done ? s + x.cost : s, 0));
+    const pending = round2(shopItems.reduce((s, x) => x.done ? s : s + x.cost, 0));
+    const hasBudget = shopBudget > 0;
+    const remaining = round2(shopBudget - spent);
+    const pct = hasBudget ? Math.round((spent / shopBudget) * 100) : 0;
+
+    // Summary cards
+    shopSpentEl.textContent = formatMoney(spent);
+    shopPendingEl.textContent = formatMoney(pending);
+    if (hasBudget) {
+      shopRemainingEl.textContent = formatMoney(remaining);
+      shopRemainingEl.className = "stat-value " + (remaining < 0 ? "red" : "yellow");
+    } else {
+      shopRemainingEl.textContent = "—";
+      shopRemainingEl.className = "stat-value";
+    }
+
+    // Progress + status
+    shopBar.style.width = Math.min(100, pct) + "%";
+    shopBar.className = "progress-bar" + (pct > 100 ? " over" : pct >= 80 ? " warn" : "");
+    shopUsedEl.textContent = hasBudget ? t("budgetUsed").replace("{n}", pct) : "";
+
+    if (!hasBudget) {
+      shopStatusEl.className = "pill";
+      shopStatusEl.innerHTML = `<i class="fa-solid fa-circle-info"></i>${t("budgetNone")}`;
+    } else if (remaining < 0) {
+      shopStatusEl.className = "pill red";
+      shopStatusEl.innerHTML = `<i class="fa-solid fa-triangle-exclamation"></i>${t("budgetOver")}`;
+    } else {
+      shopStatusEl.className = "pill green";
+      shopStatusEl.innerHTML = `<i class="fa-solid fa-circle-check"></i>${t("budgetOk")}`;
+    }
+
+    // List: pending items first, then purchased; each group by date
+    const sorted = [...shopItems].sort((a, b) =>
+      (Number(a.done) - Number(b.done)) || a.date.localeCompare(b.date) || (a.id - b.id));
+
+    shopList.innerHTML = sorted.map((x) => entryHTML({
+      id: x.id,
+      title: x.name,
+      date: x.date,
+      amount: x.cost,
+      done: x.done,
+      amountClass: x.done ? "red" : "",
+      badge: x.done
+        ? pill("green", "fa-circle-check", t("purchased"))
+        : pill("yellow", "fa-hourglass-half", t("pending")),
+      toggleLabel: x.done ? t("markPending") : t("markPurchased"),
+      deleteLabel: t("deleteItem")
+    })).join("");
+
+    shopEmpty.classList.toggle("hidden", sorted.length > 0);
+  }
+
+  shopBudgetEl.addEventListener("input", () => {
+    const v = parseFloat(shopBudgetEl.value);
+    shopBudget = isFinite(v) && v > 0 ? round2(v) : 0;
+    localStorage.setItem(SHOP_BUDGET_KEY, String(shopBudget));
+    renderShopping();                    // does not touch the input, so typing is never interrupted
+  });
+
+  shopForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const name = shopNameEl.value.trim();
+    const cost = parseFloat(shopCostEl.value);
+
+    if (!name) { alert(t("invalidItem")); shopNameEl.focus(); return; }
+    if (!isFinite(cost) || cost <= 0) { alert(t("invalidAmount")); shopCostEl.focus(); return; }
+
+    shopItems.push({
+      id: uid(),
+      name,
+      cost: round2(cost),
+      date: shopDateEl.value || todayISO(),
+      done: false
+    });
+    persistShop();
+    renderShopping();
+
+    shopNameEl.value = "";
+    shopCostEl.value = "";
+    shopNameEl.focus();
+  });
+
+  shopList.addEventListener("click", (e) => {
+    const btn = e.target.closest("[data-action]");
+    if (!btn) return;
+    const id = Number(btn.dataset.id);
+
+    if (btn.dataset.action === "toggle") {
+      const item = shopItems.find((x) => x.id === id);
+      if (item) { item.done = !item.done; persistShop(); renderShopping(); }
+    } else if (btn.dataset.action === "delete") {
+      if (!confirm(t("confirmDeleteItem"))) return;
+      shopItems = shopItems.filter((x) => x.id !== id);
+      persistShop();
+      renderShopping();
+    }
+  });
+
+  /* =====================================================================
+     DEBT TRACKER
+     ===================================================================== */
+  function persistDebts() {
+    writeJSON(DEBTS_KEY, debts);
+  }
+
+  function renderDebts() {
+    const total = round2(debts.reduce((s, x) => s + x.amount, 0));
+    const settled = round2(debts.reduce((s, x) => x.settled ? s + x.amount : s, 0));
+    const unsettled = round2(total - settled);
+    const pct = total > 0 ? Math.round((settled / total) * 100) : 0;
+
+    // Summary cards
+    debtTotalEl.textContent = formatMoney(total);
+    debtUnsettledEl.textContent = formatMoney(unsettled);
+    debtSettledEl.textContent = formatMoney(settled);
+
+    // Progress + status
+    debtBar.style.width = pct + "%";
+    debtBar.className = "progress-bar";            // green: the share that has been settled
+    debtPctEl.textContent = total > 0 ? t("debtSettledPct").replace("{n}", pct) : "";
+
+    if (total === 0) {
+      debtStatusEl.className = "pill";
+      debtStatusEl.innerHTML = `<i class="fa-solid fa-circle-info"></i>${t("debtStatusNone")}`;
+    } else if (unsettled === 0) {
+      debtStatusEl.className = "pill green";
+      debtStatusEl.innerHTML = `<i class="fa-solid fa-circle-check"></i>${t("debtStatusClear")}`;
+    } else {
+      debtStatusEl.className = "pill red";
+      debtStatusEl.innerHTML = `<i class="fa-solid fa-circle-exclamation"></i>${t("debtStatusOpen")}`;
+    }
+
+    // List: unsettled first, then settled; each group by date
+    const sorted = [...debts].sort((a, b) =>
+      (Number(a.settled) - Number(b.settled)) || a.date.localeCompare(b.date) || (a.id - b.id));
+
+    debtList.innerHTML = sorted.map((x) => entryHTML({
+      id: x.id,
+      title: x.creditor,
+      date: x.date,
+      amount: x.amount,
+      done: x.settled,
+      amountClass: x.settled ? "green" : "red",
+      badge: x.settled
+        ? pill("green", "fa-circle-check", t("settled"))
+        : pill("red", "fa-circle-exclamation", t("unsettled")),
+      toggleLabel: x.settled ? t("markUnsettled") : t("markSettled"),
+      deleteLabel: t("deleteDebt")
+    })).join("");
+
+    debtEmpty.classList.toggle("hidden", sorted.length > 0);
+  }
+
+  debtForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const creditor = debtCreditorEl.value.trim();
+    const amount = parseFloat(debtAmountEl.value);
+
+    if (!creditor) { alert(t("invalidCreditor")); debtCreditorEl.focus(); return; }
+    if (!isFinite(amount) || amount <= 0) { alert(t("invalidAmount")); debtAmountEl.focus(); return; }
+
+    debts.push({
+      id: uid(),
+      creditor,
+      amount: round2(amount),
+      date: debtDateEl.value || todayISO(),
+      settled: false
+    });
+    persistDebts();
+    renderDebts();
+
+    debtCreditorEl.value = "";
+    debtAmountEl.value = "";
+    debtCreditorEl.focus();
+  });
+
+  debtList.addEventListener("click", (e) => {
+    const btn = e.target.closest("[data-action]");
+    if (!btn) return;
+    const id = Number(btn.dataset.id);
+
+    if (btn.dataset.action === "toggle") {
+      const debt = debts.find((x) => x.id === id);
+      if (debt) { debt.settled = !debt.settled; persistDebts(); renderDebts(); }
+    } else if (btn.dataset.action === "delete") {
+      if (!confirm(t("confirmDeleteDebt"))) return;
+      debts = debts.filter((x) => x.id !== id);
+      persistDebts();
+      renderDebts();
+    }
+  });
+
+  /* =====================================================================
+     GLOBAL: language, theme, clock, background
+     ===================================================================== */
+  function renderDateTime() {
+    datetimeEl.textContent = new Intl.DateTimeFormat(locale(), {
+      weekday: "long", year: "numeric", month: "long", day: "numeric",
+      hour: "2-digit", minute: "2-digit", second: "2-digit"
+    }).format(new Date());
+  }
+
+  function applyLanguage() {
+    document.documentElement.lang = lang;
+    document.documentElement.dir = lang === "ar" ? "rtl" : "ltr";
+    document.title = t("title");
+
+    document.querySelectorAll("[data-i18n]").forEach((el) => {
+      el.textContent = t(el.dataset.i18n);
+    });
+    document.querySelectorAll("[data-i18n-placeholder]").forEach((el) => {
+      el.placeholder = t(el.dataset.i18nPlaceholder);
+    });
+
+    tabsEl.setAttribute("aria-label", t("tabsLabel"));
+    quoteRefreshBtn.setAttribute("aria-label", t("newQuote"));
+    quoteRefreshBtn.title = t("newQuote");
+    detailsClose.setAttribute("aria-label", t("closeDetails"));
+    detailsClose.title = t("closeDetails");
+    if (!quotesReady) quoteTextEl.textContent = t("quoteLoading");
+
+    langBtn.textContent = lang === "ar" ? "EN" : "AR";
+
+    // Re-render every module in the new language
+    renderTable();      // also re-renders the details card
+    renderShopping();
+    renderDebts();
+    renderDateTime();
+  }
+
+  function applyTheme() {
+    document.documentElement.setAttribute("data-theme", theme);
+    themeBtn.innerHTML = theme === "dark"
+      ? '<i class="fa-solid fa-sun"></i>'
+      : '<i class="fa-solid fa-moon"></i>';
+  }
+
+  langBtn.addEventListener("click", () => {
+    lang = lang === "ar" ? "en" : "ar";
+    localStorage.setItem(LANG_KEY, lang);
+    applyLanguage();
+    showQuote(true);                     // new quote in the newly selected language
+  });
+
+  themeBtn.addEventListener("click", () => {
+    theme = theme === "dark" ? "light" : "dark";
+    localStorage.setItem(THEME_KEY, theme);
+    applyTheme();
   });
 
   /* ---------- Floating $ background ---------- */
@@ -668,11 +1165,17 @@
   }
 
   /* ---------- Init ---------- */
-  dateEl.value = todayISO();
+  const today = todayISO();
+  dateEl.value = today;
+  shopDateEl.value = today;
+  debtDateEl.value = today;
+  shopBudgetEl.value = shopBudget > 0 ? shopBudget : "";
+
   renderVersion();
   applyTheme();
   applyReadOnly();
   applyLanguage();
+  setTab(activeTab, false);
   initBackground();
   loadQuotes();
   setInterval(renderDateTime, 1000);
