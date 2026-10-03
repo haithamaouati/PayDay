@@ -58,6 +58,9 @@
       <button class="tab" id="tab-debts" role="tab" data-tab="debts" aria-selected="false" aria-controls="panel-debts" tabindex="-1" type="button">
         <i class="fa-solid fa-hand-holding-dollar"></i><span data-i18n="tabDebts">Debt Tracker</span>
       </button>
+      <button class="tab" id="tab-analytics" role="tab" data-tab="analytics" aria-selected="false" aria-controls="panel-analytics" tabindex="-1" type="button">
+        <i class="fa-solid fa-chart-line"></i><span data-i18n="tabAnalytics">Analytics</span>
+      </button>
     </nav>
 
     <main class="workspace">
@@ -128,18 +131,6 @@
             </table>
           </div>
           <p id="emptyMsg" class="empty" data-i18n="empty">No transactions recorded yet. Post your first transaction above.</p>
-
-          <div class="table-actions">
-            <button id="exportBtn" class="btn">
-              <i class="fa-solid fa-file-export"></i>
-              <span data-i18n="exportJson">Export Ledger (JSON)</span>
-            </button>
-            <button id="importBtn" class="btn">
-              <i class="fa-solid fa-file-import"></i>
-              <span data-i18n="importJson">Import Ledger (JSON)</span>
-            </button>
-            <input type="file" id="importFile" accept="application/json,.json" hidden>
-          </div>
         </section>
 
         <!-- Transaction details (hidden until a ledger row is clicked) -->
@@ -245,26 +236,38 @@
       <!-- ============ TAB 3: DEBT TRACKER ============ -->
       <section class="tab-panel" id="panel-debts" role="tabpanel" aria-labelledby="tab-debts" data-panel="debts" hidden>
 
-        <!-- Summary -->
+        <!-- Debt repayment budget + summary -->
         <section class="card">
           <h2 class="card-title">
-            <i class="fa-solid fa-chart-pie"></i>
+            <i class="fa-solid fa-landmark"></i>
             <span data-i18n="debtOverviewTitle">Debt Overview</span>
           </h2>
+
+          <div class="field budget-field">
+            <label for="debtBudget" data-i18n="debtBudgetLabel">Debt Repayment Budget (DZD)</label>
+            <input type="number" id="debtBudget" min="0" step="0.01" placeholder="0.00">
+          </div>
 
           <div class="summary-grid">
             <div class="stat">
               <div class="stat-icon red"><i class="fa-solid fa-file-invoice-dollar"></i></div>
               <div class="stat-body">
-                <span class="stat-label" data-i18n="statDebtTotal">Total Outstanding Liabilities</span>
+                <span class="stat-label" data-i18n="statDebtTotal">Total Outstanding Debt</span>
                 <strong class="stat-value red" id="debtTotal">0.00</strong>
+              </div>
+            </div>
+            <div class="stat">
+              <div class="stat-icon"><i class="fa-solid fa-hand-holding-dollar"></i></div>
+              <div class="stat-body">
+                <span class="stat-label" data-i18n="statDebtAllocated">Allocated Repayment Amount</span>
+                <strong class="stat-value" id="debtAllocated">0.00</strong>
               </div>
             </div>
             <div class="stat">
               <div class="stat-icon yellow"><i class="fa-solid fa-scale-unbalanced"></i></div>
               <div class="stat-body">
-                <span class="stat-label" data-i18n="statDebtUnsettled">Unsettled Balance</span>
-                <strong class="stat-value yellow" id="debtUnsettled">0.00</strong>
+                <span class="stat-label" data-i18n="statDebtRemaining">Remaining Debt Post-Allocation</span>
+                <strong class="stat-value yellow" id="debtRemaining">0.00</strong>
               </div>
             </div>
             <div class="stat">
@@ -319,12 +322,103 @@
           <p class="empty" id="debtEmpty" data-i18n="debtEmpty">No liabilities recorded. Your debt register is clear.</p>
         </section>
       </section>
+
+      <!-- ============ TAB 4: ANALYTICS ============ -->
+      <section class="tab-panel" id="panel-analytics" role="tabpanel" aria-labelledby="tab-analytics" data-panel="analytics" hidden>
+
+        <!-- Overview KPIs -->
+        <section class="card">
+          <h2 class="card-title">
+            <i class="fa-solid fa-chart-line"></i>
+            <span data-i18n="analyticsTitle">Financial Insights & Analytics</span>
+          </h2>
+          <p class="card-sub" data-i18n="analyticsIntro">Live statistics from your Salary Ledger, Shopping Budget and Debt Tracker.</p>
+
+          <div class="summary-grid">
+            <div class="stat">
+              <div class="stat-icon green"><i class="fa-solid fa-circle-arrow-down"></i></div>
+              <div class="stat-body">
+                <span class="stat-label" data-i18n="statIncome">Total Income</span>
+                <strong class="stat-value green" id="anIncome">0.00</strong>
+              </div>
+            </div>
+            <div class="stat">
+              <div class="stat-icon red"><i class="fa-solid fa-circle-arrow-up"></i></div>
+              <div class="stat-body">
+                <span class="stat-label" data-i18n="statExpenses">Total Expenses</span>
+                <strong class="stat-value red" id="anExpenses">0.00</strong>
+              </div>
+            </div>
+            <div class="stat">
+              <div class="stat-icon yellow"><i class="fa-solid fa-scale-balanced"></i></div>
+              <div class="stat-body">
+                <span class="stat-label" data-i18n="statNet">Net Cash Flow</span>
+                <strong class="stat-value yellow" id="anNet">0.00</strong>
+              </div>
+            </div>
+            <div class="stat">
+              <div class="stat-icon"><i class="fa-solid fa-gauge-high"></i></div>
+              <div class="stat-body">
+                <span class="stat-label" data-i18n="statEfficiency">Net Cash Flow Efficiency</span>
+                <strong class="stat-value" id="anEfficiency">—</strong>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Chart 1: Cash flow ratio -->
+        <section class="card">
+          <h2 class="card-title">
+            <i class="fa-solid fa-chart-pie"></i>
+            <span data-i18n="cashFlowTitle">Cash Flow Ratio</span>
+          </h2>
+          <p class="card-sub" data-i18n="cashFlowSub">Salary Ledger statistics</p>
+          <div class="chart-block" id="cashFlowChart"></div>
+        </section>
+
+        <!-- Chart 2: Expense attribution -->
+        <section class="card">
+          <h2 class="card-title">
+            <i class="fa-solid fa-diagram-project"></i>
+            <span data-i18n="attrTitle">Expense Attribution Analysis</span>
+          </h2>
+          <p class="card-sub" data-i18n="attrSub">Withdrawals cross-referenced with the Shopping Budget and Debt Tracker</p>
+
+          <h3 class="chart-heading" data-i18n="allocTitle">Fund Allocation Breakdown</h3>
+          <div class="chart-block" id="attrChart"></div>
+          <p class="attr-summary" id="attrSummary"></p>
+
+          <h3 class="chart-heading" data-i18n="detailsAttrTitle">Attribution Details</h3>
+          <ul class="attr-list" id="attrList"></ul>
+          <p class="empty" id="attrEmpty" data-i18n="attrEmpty">No withdrawals recorded yet.</p>
+        </section>
+      </section>
     </main>
+
+    <!-- Master data backup (global: applies to every module) -->
+    <section class="card backup">
+      <h2 class="card-title">
+        <i class="fa-solid fa-database"></i>
+        <span data-i18n="backupTitle">Master Data Backup</span>
+      </h2>
+      <p class="card-sub" data-i18n="backupDesc">Export or restore all modules (ledger, shopping, debts and settings) in a single JSON file.</p>
+      <div class="table-actions">
+        <button id="exportBtn" class="btn" type="button">
+          <i class="fa-solid fa-file-export"></i>
+          <span data-i18n="exportJson">Export Master Backup (JSON)</span>
+        </button>
+        <button id="importBtn" class="btn" type="button">
+          <i class="fa-solid fa-file-import"></i>
+          <span data-i18n="importJson">Import Master Backup (JSON)</span>
+        </button>
+        <input type="file" id="importFile" accept="application/json,.json" hidden>
+      </div>
+    </section>
 
     <!-- Footer -->
     <footer class="footer">
       <!-- Version is written by app.js from APP_VERSION; this text is the no-JS fallback -->
-      <div class="version" id="appVersion" dir="ltr">Version: 1.1.0</div>
+      <div class="version" id="appVersion" dir="ltr">Version: 1.2.0</div>
       <p class="credits">
         <span data-i18n="footerPrefix">Developed with love</span>
         <i class="fa-solid fa-heart"></i>

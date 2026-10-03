@@ -10,6 +10,9 @@
   --green: #16a34a;
   --red: #dc2626;
   --yellow: #ca8a04;
+  --c-shop: #3b82f6;          /* chart: shopping */
+  --c-debt: #8b5cf6;          /* chart: debt settlement */
+  --c-general: #94a3b8;       /* chart: uncategorized */
   --shadow: 0 4px 20px rgba(10, 50, 35, 0.07);
   --radius: 14px;
   --font: "Inter", system-ui, sans-serif;
@@ -27,6 +30,9 @@
   --green: #4ade80;
   --red: #f87171;
   --yellow: #facc15;
+  --c-shop: #60a5fa;
+  --c-debt: #a78bfa;
+  --c-general: #7f8ea3;
   --shadow: 0 4px 20px rgba(0, 0, 0, 0.45);
   color-scheme: dark;
 }
@@ -277,6 +283,13 @@ body {
 }
 .card-title i { color: var(--accent); }
 
+.card-title + .card-sub { margin-top: -10px; }
+.card-sub {
+  margin-bottom: 16px;
+  font-size: 0.88rem;
+  color: var(--muted);
+}
+
 /* Form */
 .form {
   display: grid;
@@ -323,7 +336,7 @@ input:focus, select:focus {
 .btn:disabled { opacity: 0.45; cursor: not-allowed; transform: none; border-color: var(--border); }
 .submit { grid-column: 1 / -1; padding: 13px; font-size: 1rem; }
 
-/* ---------- Summary stat cards (Shopping + Debts) ---------- */
+/* ---------- Summary stat cards ---------- */
 .budget-field { margin-bottom: 16px; }
 
 .summary-grid {
@@ -411,9 +424,12 @@ input:focus, select:focus {
   border-radius: 999px;
 }
 .pill:empty { display: none; }
-.pill.green  { color: var(--green); }
-.pill.red    { color: var(--red); }
-.pill.yellow { color: var(--yellow); }
+.pill.green   { color: var(--green); }
+.pill.red     { color: var(--red); }
+.pill.yellow  { color: var(--yellow); }
+.pill.shop    { color: var(--c-shop); }
+.pill.debt    { color: var(--c-debt); }
+.pill.general { color: var(--muted); }
 
 /* ---------- Entry lists (Shopping + Debts) ---------- */
 .entry-list {
@@ -474,13 +490,153 @@ input:focus, select:focus {
   font-size: 0.82rem;
   color: var(--muted);
 }
-.entry-meta .meta-date { display: inline-flex; align-items: center; gap: 6px; }
+.meta-date { display: inline-flex; align-items: center; gap: 6px; }
 
 .entry-amount {
   font-weight: 700;
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
 }
+
+/* ---------- Analytics: charts ---------- */
+.chart-heading {
+  margin: 4px 0 14px;
+  font-size: 0.95rem;
+  font-weight: 700;
+}
+
+.chart-block {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 24px 36px;
+}
+
+.donut-wrap {
+  position: relative;
+  width: 200px;
+  height: 200px;
+  flex-shrink: 0;
+}
+.donut-svg { width: 100%; height: 100%; display: block; }
+.donut-track { stroke: var(--surface-2); }
+
+.seg {
+  cursor: pointer;
+  transition: opacity 0.2s, stroke-width 0.2s;
+}
+.seg.k-income  { stroke: var(--green); }
+.seg.k-expense { stroke: var(--red); }
+.seg.k-shopping { stroke: var(--c-shop); }
+.seg.k-debt     { stroke: var(--c-debt); }
+.seg.k-general  { stroke: var(--c-general); }
+.donut-wrap.has-active .seg:not(.active) { opacity: 0.3; }
+.seg.active { stroke-width: 7; }
+
+.donut-center {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  padding: 0 40px;
+  text-align: center;
+  pointer-events: none;
+}
+.donut-value {
+  font-size: 1.45rem;
+  font-weight: 700;
+  line-height: 1.1;
+  font-variant-numeric: tabular-nums;
+}
+.donut-label {
+  font-size: 0.74rem;
+  font-weight: 600;
+  line-height: 1.25;
+  color: var(--muted);
+}
+
+.legend {
+  flex: 1;
+  min-width: 240px;
+  max-width: 460px;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.legend-item {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  outline: none;
+  transition: border-color 0.15s, background 0.15s;
+}
+.legend-item.active,
+.legend-item:focus-visible { border-color: var(--accent); }
+
+.dot { width: 12px; height: 12px; border-radius: 50%; }
+.dot.k-income   { background: var(--green); }
+.dot.k-expense  { background: var(--red); }
+.dot.k-shopping { background: var(--c-shop); }
+.dot.k-debt     { background: var(--c-debt); }
+.dot.k-general  { background: var(--c-general); }
+
+.legend-text { display: flex; flex-direction: column; min-width: 0; }
+.legend-label { font-size: 0.9rem; font-weight: 600; overflow-wrap: anywhere; }
+.legend-sub { font-size: 0.76rem; color: var(--muted); }
+.legend-vals { display: flex; flex-direction: column; align-items: flex-end; }
+.legend-pct { font-size: 0.95rem; font-variant-numeric: tabular-nums; }
+.legend-amt { font-size: 0.76rem; color: var(--muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
+
+.attr-summary {
+  margin: 16px 0 20px;
+  text-align: center;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--muted);
+}
+.attr-summary:empty { display: none; }
+
+.attr-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 340px;
+  overflow-y: auto;
+  padding-inline-end: 4px;
+}
+.attr-list:empty { display: none; }
+
+.attr-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+}
+.attr-main { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.attr-memo { font-weight: 600; overflow-wrap: anywhere; }
+.attr-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 12px;
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+.attr-meta i { margin-inline-end: 4px; }
+.attr-amount { font-weight: 700; white-space: nowrap; font-variant-numeric: tabular-nums; }
 
 /* ---------- Ledger toolbar + Read-only toggle ---------- */
 .table-toolbar {
@@ -610,6 +766,7 @@ tr.editing .edit-note   { min-width: 150px; }
   display: flex; flex-wrap: wrap; justify-content: center; gap: 12px;
   margin-top: 18px;
 }
+.backup .table-actions { margin-top: 0; }
 
 /* ---------- Transaction details (banking summary slip) ---------- */
 .details { padding: 20px; }
@@ -744,12 +901,12 @@ html[lang="ar"] .d-label { text-transform: none; letter-spacing: 0; font-size: 0
   .card { padding: 14px; }
   .btn { flex: 1 1 100%; }
 
-  .tabs { gap: 4px; padding: 4px; }
+  .tabs { gap: 3px; padding: 4px; }
   .tab {
     flex-direction: column;
     gap: 4px;
-    padding: 9px 4px;
-    font-size: 0.76rem;
+    padding: 9px 2px;
+    font-size: 0.7rem;
     line-height: 1.2;
     text-align: center;
   }
@@ -764,6 +921,14 @@ html[lang="ar"] .d-label { text-transform: none; letter-spacing: 0; font-size: 0
 
   .entry { gap: 10px; padding: 10px 12px; }
   .entry-amount { font-size: 0.92rem; }
+
+  .donut-wrap { width: 180px; height: 180px; }
+  .donut-center { padding: 0 34px; }
+  .donut-value { font-size: 1.25rem; }
+  .legend { min-width: 100%; }
+
+  .attr-row { flex-wrap: wrap; }
+  .attr-main { flex: 1 1 100%; }
 
   .details { padding: 12px; }
   .details-list { padding: 2px 14px 14px; }
@@ -781,4 +946,5 @@ html[lang="ar"] .d-label { text-transform: none; letter-spacing: 0; font-size: 0
   .details:not([hidden]) { animation: none; }
   .tab-panel:not([hidden]) { animation: none; }
   .progress-bar { transition: none; }
+  .seg { transition: none; }
 }

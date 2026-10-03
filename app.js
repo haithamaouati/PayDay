@@ -6,7 +6,7 @@
      MINOR: new features that are backwards compatible
      PATCH: backwards-compatible fixes and polish (e.g. wording, styling)
      Update only this constant; the footer renders it automatically. */
-  const APP_VERSION = "1.1.0";
+  const APP_VERSION = "1.2.0";
 
   const STORAGE_KEY = "payday_records";
   const LANG_KEY = "payday_lang";
@@ -16,9 +16,10 @@
   const SHOP_BUDGET_KEY = "payday_shop_budget";
   const SHOP_ITEMS_KEY = "payday_shop_items";
   const DEBTS_KEY = "payday_debts";
+  const DEBT_BUDGET_KEY = "payday_debt_budget";
   const QUOTES_URL = "quotes.json";
 
-  const TABS = ["ledger", "shopping", "debts"];
+  const TABS = ["ledger", "shopping", "debts", "analytics"];
 
   // Used per language only if quotes.json cannot be loaded (e.g. opened via file://)
   const FALLBACK_QUOTES = {
@@ -36,7 +37,7 @@
 
   /* ---------- Translations (FinTech terminology) ----------
      Note: ledger record types remain "save" / "withdraw" internally so
-     existing localStorage data and exported JSON files stay compatible.
+     existing localStorage data and backups stay compatible.
      They are displayed as "Deposit" / "Withdrawal". */
   const i18n = {
     en: {
@@ -48,6 +49,7 @@
       tabLedger: "Salary Ledger",
       tabShopping: "Shopping Budget",
       tabDebts: "Debt Tracker",
+      tabAnalytics: "Analytics",
 
       // Salary ledger
       newTransaction: "New Transaction",
@@ -66,13 +68,9 @@
       colMemo: "Description",
       colBalance: "Available Balance",
       empty: "No transactions recorded yet. Post your first transaction above.",
-      exportJson: "Export Ledger (JSON)",
-      importJson: "Import Ledger (JSON)",
       depositLabel: "Deposit",
       withdrawalLabel: "Withdrawal",
       confirmDelete: "Delete this transaction? This action cannot be undone.",
-      importOk: "Ledger imported successfully.",
-      importErr: "Import failed: the selected file is not a valid JSON ledger.",
       invalidAmount: "Please enter a valid amount greater than zero.",
       rowHintEdit: "Click to view transaction details and edit",
       rowHintView: "Click to view transaction details",
@@ -114,8 +112,10 @@
 
       // Debt tracker
       debtOverviewTitle: "Debt Overview",
-      statDebtTotal: "Total Outstanding Liabilities",
-      statDebtUnsettled: "Unsettled Balance",
+      debtBudgetLabel: "Debt Repayment Budget (DZD)",
+      statDebtTotal: "Total Outstanding Debt",
+      statDebtAllocated: "Allocated Repayment Amount",
+      statDebtRemaining: "Remaining Debt Post-Allocation",
       statDebtSettled: "Settled Amount",
       debtFormTitle: "New Liability",
       debtCreditor: "Creditor Name",
@@ -132,10 +132,49 @@
       deleteDebt: "Delete liability",
       confirmDeleteDebt: "Delete this liability record? This action cannot be undone.",
       invalidCreditor: "Please enter the creditor name.",
-      debtSettledPct: "{n}% of liabilities settled",
+      debtCoverage: "Allocation covers {n}% of outstanding debt",
       debtStatusNone: "No liabilities",
-      debtStatusOpen: "Outstanding",
       debtStatusClear: "Fully settled",
+      debtFunded: "Fully funded",
+      debtPartial: "Partially funded",
+      debtUnfunded: "Not funded",
+
+      // Analytics
+      analyticsTitle: "Financial Insights & Analytics",
+      analyticsIntro: "Live statistics from your Salary Ledger, Shopping Budget and Debt Tracker.",
+      statIncome: "Total Income",
+      statExpenses: "Total Expenses",
+      statNet: "Net Cash Flow",
+      statEfficiency: "Net Cash Flow Efficiency",
+      cashFlowTitle: "Cash Flow Ratio",
+      cashFlowSub: "Salary Ledger statistics",
+      incomeLabel: "Income (Deposits)",
+      expenseLabel: "Expenses (Withdrawals)",
+      netEfficiency: "Net Efficiency",
+      attrTitle: "Expense Attribution Analysis",
+      attrSub: "Withdrawals cross-referenced with the Shopping Budget and Debt Tracker",
+      allocTitle: "Fund Allocation Breakdown",
+      catShopping: "Shopping Budget",
+      catDebt: "Debt Settlement",
+      catGeneral: "Uncategorized / General",
+      attributed: "Attributed",
+      linkedCount: "{a} of {b} withdrawals linked to a shopping item or liability",
+      detailsAttrTitle: "Attribution Details",
+      linkedTo: "Linked to",
+      noMemo: "No description",
+      attrEmpty: "No withdrawals recorded yet.",
+      noData: "No data",
+      countLabel: "Transactions: {n}",
+
+      // Master backup
+      backupTitle: "Master Data Backup",
+      backupDesc: "Export or restore all modules (ledger, shopping, debts and settings) in a single JSON file.",
+      exportJson: "Export Master Backup (JSON)",
+      importJson: "Import Master Backup (JSON)",
+      confirmImport: "Restoring this backup will replace the current data in all modules. Continue?",
+      importOk: "Master backup restored successfully.",
+      importErr: "Import failed: the selected file is not a valid PayDay master backup.",
+      importLocked: "Disable Read-Only Mode to import data",
 
       // Shared
       currency: "DZD",
@@ -154,6 +193,7 @@
       tabLedger: "سجل الراتب",
       tabShopping: "ميزانية التسوق",
       tabDebts: "سجل الديون",
+      tabAnalytics: "الإحصائيات",
 
       // Salary ledger
       newTransaction: "معاملة جديدة",
@@ -172,13 +212,9 @@
       colMemo: "البيان",
       colBalance: "الرصيد المتاح",
       empty: "لا توجد معاملات مسجّلة بعد. سجّل أول معاملة من الأعلى.",
-      exportJson: "تصدير السجل (JSON)",
-      importJson: "استيراد السجل (JSON)",
       depositLabel: "إيداع",
       withdrawalLabel: "سحب",
       confirmDelete: "هل تريد حذف هذه المعاملة؟ لا يمكن التراجع عن هذا الإجراء.",
-      importOk: "تم استيراد السجل بنجاح.",
-      importErr: "فشل الاستيراد: الملف المحدد ليس سجلًا بصيغة JSON صالحة.",
       invalidAmount: "الرجاء إدخال مبلغ صحيح أكبر من الصفر.",
       rowHintEdit: "انقر لعرض تفاصيل المعاملة وتعديلها",
       rowHintView: "انقر لعرض تفاصيل المعاملة",
@@ -220,8 +256,10 @@
 
       // Debt tracker
       debtOverviewTitle: "نظرة عامة على الديون",
+      debtBudgetLabel: "الميزانية المخصصة لسداد الديون (دج)",
       statDebtTotal: "إجمالي المديونية",
-      statDebtUnsettled: "الرصيد المتبقي للسداد",
+      statDebtAllocated: "المبلغ المخصص/المسدد للديون",
+      statDebtRemaining: "الرصيد المتبقي من الدين بعد التخصيص",
       statDebtSettled: "المبلغ المسدَّد",
       debtFormTitle: "التزام جديد",
       debtCreditor: "اسم الدائن",
@@ -238,10 +276,49 @@
       deleteDebt: "حذف الالتزام",
       confirmDeleteDebt: "هل تريد حذف سجل هذا الالتزام؟ لا يمكن التراجع عن هذا الإجراء.",
       invalidCreditor: "الرجاء إدخال اسم الدائن.",
-      debtSettledPct: "تم سداد {n}% من الالتزامات",
+      debtCoverage: "التخصيص يغطي {n}% من الدين القائم",
       debtStatusNone: "لا توجد التزامات",
-      debtStatusOpen: "قيد السداد",
       debtStatusClear: "مسدَّدة بالكامل",
+      debtFunded: "ممولة بالكامل",
+      debtPartial: "ممولة جزئيًا",
+      debtUnfunded: "غير ممولة",
+
+      // Analytics
+      analyticsTitle: "قسم الإحصائيات والمخططات البيانية",
+      analyticsIntro: "إحصائيات مباشرة من سجل الراتب وميزانية التسوق وسجل الديون.",
+      statIncome: "إجمالي الدخل",
+      statExpenses: "إجمالي المصروفات",
+      statNet: "صافي التدفق النقدي",
+      statEfficiency: "كفاءة صافي التدفق النقدي",
+      cashFlowTitle: "نسبة التدفق النقدي",
+      cashFlowSub: "إحصائيات كشف الراتب",
+      incomeLabel: "الدخل (الإيداعات)",
+      expenseLabel: "المصروفات (السحوبات)",
+      netEfficiency: "كفاءة الصافي",
+      attrTitle: "تحليل توزيع المصروفات",
+      attrSub: "ربط وإحصاء السحوبات بميزانية التسوق والديون",
+      allocTitle: "مخطط تخصيص الأموال",
+      catShopping: "ميزانية التسوق",
+      catDebt: "سداد الديون",
+      catGeneral: "مصروفات عامة غير مصنفة",
+      attributed: "المُسنَد",
+      linkedCount: "تم ربط {a} من أصل {b} سحب بسلعة أو التزام",
+      detailsAttrTitle: "تفاصيل التوزيع",
+      linkedTo: "مرتبط بـ",
+      noMemo: "بدون بيان",
+      attrEmpty: "لا توجد سحوبات مسجّلة بعد.",
+      noData: "لا توجد بيانات",
+      countLabel: "عدد المعاملات: {n}",
+
+      // Master backup
+      backupTitle: "نسخ احتياطي شامل للبيانات",
+      backupDesc: "صدّر أو استعد بيانات جميع الأقسام (سجل الراتب، المشتريات، الديون والإعدادات) في ملف JSON واحد.",
+      exportJson: "تصدير النسخة الاحتياطية (JSON)",
+      importJson: "استيراد النسخة الاحتياطية (JSON)",
+      confirmImport: "ستؤدي استعادة هذه النسخة إلى استبدال البيانات الحالية في جميع الأقسام. هل تريد المتابعة؟",
+      importOk: "تمت استعادة النسخة الاحتياطية الشاملة بنجاح.",
+      importErr: "فشل الاستيراد: الملف المحدد ليس نسخة احتياطية صالحة لتطبيق PayDay.",
+      importLocked: "عطّل وضع القراءة فقط لاستيراد البيانات",
 
       // Shared
       currency: "دج",
@@ -253,7 +330,7 @@
     }
   };
 
-  /* ---------- Storage helpers ---------- */
+  /* ---------- Storage helpers & normalizers ---------- */
   function readJSON(key) {
     try { return JSON.parse(localStorage.getItem(key)); } catch { return null; }
   }
@@ -263,48 +340,52 @@
 
   const ISO_DATE = /^\d{4}-\d{2}-\d{2}$/;
   const round2 = (n) => Math.round(n * 100) / 100;
+  const cleanMoney = (v) => { const n = Number(v); return isFinite(n) && n > 0 ? round2(n) : 0; };
 
   let seq = 0;
   const uid = () => Date.now() * 1000 + (seq++ % 1000);
 
-  function loadRecords() {
-    const data = readJSON(STORAGE_KEY);
-    return Array.isArray(data) ? data : [];
+  // Gives every record a unique numeric id, keeping the incoming one when valid
+  function withIds(list) {
+    const used = new Set();
+    return list.map((x) => {
+      let id = Number(x.id);
+      if (!isFinite(id) || used.has(id)) id = uid();
+      used.add(id);
+      return { ...x, id };
+    });
   }
 
-  function loadShopItems() {
-    const data = readJSON(SHOP_ITEMS_KEY);
-    if (!Array.isArray(data)) return [];
-    return data
+  function normalizeLedger(list) {
+    if (!Array.isArray(list)) return [];
+    const typeMap = { save: "save", deposit: "save", income: "save",
+                      withdraw: "withdraw", withdrawal: "withdraw", expense: "withdraw" };
+    return withIds(list
+      .filter((r) => r && typeMap[String(r.type).toLowerCase()] &&
+        isFinite(Number(r.amount)) && Number(r.amount) > 0 && ISO_DATE.test(r.date))
+      .map((r) => ({
+        id: r.id,
+        type: typeMap[String(r.type).toLowerCase()],
+        amount: Number(r.amount),
+        date: r.date,
+        note: typeof r.note === "string" ? r.note : ""
+      })));
+  }
+
+  function normalizeShop(list) {
+    if (!Array.isArray(list)) return [];
+    return withIds(list
       .filter((x) => x && typeof x.name === "string" && x.name.trim() &&
         isFinite(Number(x.cost)) && Number(x.cost) > 0 && ISO_DATE.test(x.date))
-      .map((x, i) => ({
-        id: isFinite(Number(x.id)) ? Number(x.id) : uid() + i,
-        name: x.name.trim(),
-        cost: Number(x.cost),
-        date: x.date,
-        done: !!x.done
-      }));
+      .map((x) => ({ id: x.id, name: x.name.trim(), cost: Number(x.cost), date: x.date, done: !!x.done })));
   }
 
-  function loadDebts() {
-    const data = readJSON(DEBTS_KEY);
-    if (!Array.isArray(data)) return [];
-    return data
+  function normalizeDebts(list) {
+    if (!Array.isArray(list)) return [];
+    return withIds(list
       .filter((x) => x && typeof x.creditor === "string" && x.creditor.trim() &&
         isFinite(Number(x.amount)) && Number(x.amount) > 0 && ISO_DATE.test(x.date))
-      .map((x, i) => ({
-        id: isFinite(Number(x.id)) ? Number(x.id) : uid() + i,
-        creditor: x.creditor.trim(),
-        amount: Number(x.amount),
-        date: x.date,
-        settled: !!x.settled
-      }));
-  }
-
-  function loadBudget() {
-    const v = parseFloat(localStorage.getItem(SHOP_BUDGET_KEY));
-    return isFinite(v) && v > 0 ? round2(v) : 0;
+      .map((x) => ({ id: x.id, creditor: x.creditor.trim(), amount: Number(x.amount), date: x.date, settled: !!x.settled })));
   }
 
   /* ---------- State ---------- */
@@ -314,17 +395,18 @@
   let activeTab = TABS.includes(localStorage.getItem(TAB_KEY)) ? localStorage.getItem(TAB_KEY) : "ledger";
 
   // Salary ledger
-  let records = loadRecords();
+  let records = normalizeLedger(readJSON(STORAGE_KEY));
   let editingId = null;
   let selectedId = null;                       // row shown in the details card
   let readOnly = localStorage.getItem(READONLY_KEY) === "1";
 
   // Shopping budget
-  let shopBudget = loadBudget();
-  let shopItems = loadShopItems();
+  let shopBudget = cleanMoney(localStorage.getItem(SHOP_BUDGET_KEY));
+  let shopItems = normalizeShop(readJSON(SHOP_ITEMS_KEY));
 
   // Debt tracker
-  let debts = loadDebts();
+  let debtBudget = cleanMoney(localStorage.getItem(DEBT_BUDGET_KEY));
+  let debts = normalizeDebts(readJSON(DEBTS_KEY));
 
   // Quotes
   let quotes = { en: [], ar: [] };
@@ -359,8 +441,6 @@
   const tbody = $("tableBody");
   const tableWrap = $("tableWrap");
   const emptyMsg = $("emptyMsg");
-  const importBtn = $("importBtn");
-  const importFile = $("importFile");
   const readOnlyToggle = $("readOnlyToggle");
   const detailsCard = $("detailsCard");
   const detailsList = $("detailsList");
@@ -383,17 +463,35 @@
 
   // Debts
   const debtForm = $("debtForm");
+  const debtBudgetEl = $("debtBudget");
   const debtCreditorEl = $("debtCreditor");
   const debtAmountEl = $("debtAmount");
   const debtDateEl = $("debtDate");
   const debtList = $("debtList");
   const debtEmpty = $("debtEmpty");
   const debtTotalEl = $("debtTotal");
-  const debtUnsettledEl = $("debtUnsettled");
+  const debtAllocatedEl = $("debtAllocated");
+  const debtRemainingEl = $("debtRemaining");
   const debtSettledEl = $("debtSettled");
   const debtBar = $("debtBar");
   const debtPctEl = $("debtPct");
   const debtStatusEl = $("debtStatus");
+
+  // Analytics
+  const anIncomeEl = $("anIncome");
+  const anExpensesEl = $("anExpenses");
+  const anNetEl = $("anNet");
+  const anEfficiencyEl = $("anEfficiency");
+  const cashFlowChart = $("cashFlowChart");
+  const attrChart = $("attrChart");
+  const attrSummary = $("attrSummary");
+  const attrList = $("attrList");
+  const attrEmpty = $("attrEmpty");
+
+  // Backup
+  const exportBtn = $("exportBtn");
+  const importBtn = $("importBtn");
+  const importFile = $("importFile");
 
   /* ---------- Helpers ---------- */
   const t = (key) => i18n[lang][key];
@@ -410,6 +508,10 @@
       minimumFractionDigits: 2,
       maximumFractionDigits: 2
     }).format(n) + " " + t("currency");
+  }
+
+  function fmtPct(n) {
+    return new Intl.NumberFormat(locale(), { maximumFractionDigits: 1 }).format(n) + "%";
   }
 
   function formatDate(iso) {
@@ -435,6 +537,10 @@
       : `<span class="badge red"><i class="fa-solid fa-arrow-up"></i> ${t("withdrawalLabel")}</span>`;
   }
 
+  function pill(cls, icon, text) {
+    return `<span class="pill ${cls}"><i class="fa-solid ${icon}"></i>${text}</span>`;
+  }
+
   /* ---------- Version ---------- */
   function renderVersion() {
     // Strict display format: "Version: MAJOR.MINOR.PATCH"
@@ -456,6 +562,8 @@
       if (on && focusTab) btn.focus();
     });
     panels.forEach((p) => { p.hidden = p.dataset.panel !== name; });
+
+    renderAnalytics();     // charts are only drawn while their tab is visible
   }
 
   tabsEl.addEventListener("click", (e) => {
@@ -723,7 +831,7 @@
       return;
     }
     records.push({
-      id: Date.now() + Math.floor(Math.random() * 1000),
+      id: uid(),
       type: typeEl.value,
       amount: round2(amount),
       date: dateEl.value || todayISO(),
@@ -790,70 +898,13 @@
   function applyReadOnly() {
     readOnlyToggle.checked = readOnly;
     tableWrap.classList.toggle("is-readonly", readOnly);
-    importBtn.disabled = readOnly;     // importing replaces the whole ledger, so it is locked too
+    importBtn.disabled = readOnly;       // importing replaces all data, so it is locked too
+    importBtn.title = readOnly ? t("importLocked") : "";
   }
-
-  // Export: file named with the current export date (YYYY-MM-DD.json)
-  $("exportBtn").addEventListener("click", () => {
-    const blob = new Blob([JSON.stringify(sortedRecords(), null, 2)], {
-      type: "application/json"
-    });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `${todayISO()}.json`;
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-    URL.revokeObjectURL(url);
-  });
-
-  importBtn.addEventListener("click", () => {
-    if (!readOnly) importFile.click();
-  });
-
-  importFile.addEventListener("change", () => {
-    const file = importFile.files[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = () => {
-      try {
-        const data = JSON.parse(reader.result);
-        if (!Array.isArray(data)) throw new Error("Not an array");
-
-        records = data
-          .filter((r) =>
-            r && (r.type === "save" || r.type === "withdraw") &&
-            isFinite(Number(r.amount)) && Number(r.amount) > 0 &&
-            ISO_DATE.test(r.date))
-          .map((r, i) => ({
-            id: Date.now() + i,
-            type: r.type,
-            amount: Number(r.amount),
-            date: r.date,
-            note: typeof r.note === "string" ? r.note : ""
-          }));
-
-        editingId = null;
-        selectedId = null;
-        persist();
-        renderTable();
-        alert(t("importOk"));
-      } catch {
-        alert(t("importErr"));
-      }
-      importFile.value = "";
-    };
-    reader.readAsText(file);
-  });
 
   /* =====================================================================
      SHARED ENTRY RENDERER (shopping items + debts)
      ===================================================================== */
-  function pill(cls, icon, text) {
-    return `<span class="pill ${cls}"><i class="fa-solid ${icon}"></i>${text}</span>`;
-  }
-
   function entryHTML(o) {
     return `
       <li class="entry${o.done ? " done" : ""}">
@@ -940,8 +991,7 @@
   }
 
   shopBudgetEl.addEventListener("input", () => {
-    const v = parseFloat(shopBudgetEl.value);
-    shopBudget = isFinite(v) && v > 0 ? round2(v) : 0;
+    shopBudget = cleanMoney(shopBudgetEl.value);
     localStorage.setItem(SHOP_BUDGET_KEY, String(shopBudget));
     renderShopping();                    // does not touch the input, so typing is never interrupted
   });
@@ -987,6 +1037,9 @@
 
   /* =====================================================================
      DEBT TRACKER
+     Outstanding = liabilities not yet marked as settled.
+     Repayment budget is money earmarked to pay the outstanding balance.
+     Remaining post-allocation = max(0, outstanding - repayment budget).
      ===================================================================== */
   function persistDebts() {
     writeJSON(DEBTS_KEY, debts);
@@ -995,28 +1048,38 @@
   function renderDebts() {
     const total = round2(debts.reduce((s, x) => s + x.amount, 0));
     const settled = round2(debts.reduce((s, x) => x.settled ? s + x.amount : s, 0));
-    const unsettled = round2(total - settled);
-    const pct = total > 0 ? Math.round((settled / total) * 100) : 0;
+    const outstanding = round2(total - settled);
+    const remaining = round2(Math.max(0, outstanding - debtBudget));
+    const covered = Math.min(debtBudget, outstanding);
+    const pct = outstanding > 0 ? Math.round((covered / outstanding) * 100) : 0;
 
     // Summary cards
-    debtTotalEl.textContent = formatMoney(total);
-    debtUnsettledEl.textContent = formatMoney(unsettled);
+    debtTotalEl.textContent = formatMoney(outstanding);
+    debtAllocatedEl.textContent = formatMoney(debtBudget);
+    debtRemainingEl.textContent = formatMoney(remaining);
+    debtRemainingEl.className = "stat-value " + (remaining > 0 ? "yellow" : "green");
     debtSettledEl.textContent = formatMoney(settled);
 
-    // Progress + status
+    // Progress (share of the outstanding debt covered by the allocation) + status
     debtBar.style.width = pct + "%";
-    debtBar.className = "progress-bar";            // green: the share that has been settled
-    debtPctEl.textContent = total > 0 ? t("debtSettledPct").replace("{n}", pct) : "";
+    debtBar.className = "progress-bar" + (pct > 0 && pct < 100 ? " warn" : "");
+    debtPctEl.textContent = outstanding > 0 ? t("debtCoverage").replace("{n}", pct) : "";
 
     if (total === 0) {
       debtStatusEl.className = "pill";
       debtStatusEl.innerHTML = `<i class="fa-solid fa-circle-info"></i>${t("debtStatusNone")}`;
-    } else if (unsettled === 0) {
+    } else if (outstanding === 0) {
       debtStatusEl.className = "pill green";
       debtStatusEl.innerHTML = `<i class="fa-solid fa-circle-check"></i>${t("debtStatusClear")}`;
+    } else if (pct >= 100) {
+      debtStatusEl.className = "pill green";
+      debtStatusEl.innerHTML = `<i class="fa-solid fa-circle-check"></i>${t("debtFunded")}`;
+    } else if (pct > 0) {
+      debtStatusEl.className = "pill yellow";
+      debtStatusEl.innerHTML = `<i class="fa-solid fa-circle-half-stroke"></i>${t("debtPartial")}`;
     } else {
       debtStatusEl.className = "pill red";
-      debtStatusEl.innerHTML = `<i class="fa-solid fa-circle-exclamation"></i>${t("debtStatusOpen")}`;
+      debtStatusEl.innerHTML = `<i class="fa-solid fa-circle-exclamation"></i>${t("debtUnfunded")}`;
     }
 
     // List: unsettled first, then settled; each group by date
@@ -1039,6 +1102,12 @@
 
     debtEmpty.classList.toggle("hidden", sorted.length > 0);
   }
+
+  debtBudgetEl.addEventListener("input", () => {
+    debtBudget = cleanMoney(debtBudgetEl.value);
+    localStorage.setItem(DEBT_BUDGET_KEY, String(debtBudget));
+    renderDebts();
+  });
 
   debtForm.addEventListener("submit", (e) => {
     e.preventDefault();
@@ -1080,6 +1149,406 @@
   });
 
   /* =====================================================================
+     ANALYTICS
+     ===================================================================== */
+
+  /* ----- Text normalization & fuzzy matching (English + Arabic) ----- */
+  function norm(s) {
+    return String(s)
+      .toLowerCase()
+      .normalize("NFKD")
+      .replace(/[\u0300-\u036f]/g, "")          // Latin diacritics
+      .replace(/[\u064B-\u065F\u0670\u0640]/g, "") // Arabic diacritics + tatweel (also strips hamza marks)
+      .replace(/ى/g, "ي")
+      .replace(/ة/g, "ه");
+  }
+
+  // Generic words that should never create a link on their own
+  const STOP = new Set((
+    "the and for with from new buy bought pay paid payment purchase purchased item items to of in on at my our an is it dzd " +
+    "من في على الى عن مع هذا هذه شراء دفع سداد تسديد مبلغ دج و"
+  ).split(" ").map(norm));
+
+  function tokens(text) {
+    const seen = new Set();
+    norm(text).split(/[^a-z0-9\u0600-\u06FF]+/).forEach((tok) => {
+      if (!tok || /^[\d\u0660-\u0669]+$/.test(tok)) return;       // ignore pure numbers
+      if (tok.length > 3 && tok.startsWith("ال")) tok = tok.slice(2);  // Arabic definite article
+      if (tok.length < 2 || STOP.has(tok)) return;
+      seen.add(tok);
+    });
+    return [...seen];
+  }
+
+  // Equal tokens, or near-equal stems ("phone" ~ "phones")
+  const tokEq = (a, b) =>
+    a === b ||
+    (a.length >= 4 && b.length >= 4 && Math.abs(a.length - b.length) <= 2 &&
+      (a.startsWith(b) || b.startsWith(a)));
+
+  function overlap(aTokens, bTokens) {
+    let n = 0;
+    aTokens.forEach((a) => { if (bTokens.some((b) => tokEq(a, b))) n++; });
+    return n;
+  }
+
+  /* ----- Cross-module attribution -----
+     Each salary WITHDRAWAL is linked to the shopping item or liability whose
+     name shares the most meaningful words with the withdrawal description.
+     An identical amount adds a small tie-breaking bonus. A link always needs
+     at least one shared word; otherwise the withdrawal is "general". */
+  function buildAttribution() {
+    const shopIdx = shopItems.map((x) => ({ label: x.name, tokens: tokens(x.name), amount: x.cost }));
+    const debtIdx = debts.map((x) => ({ label: x.creditor, tokens: tokens(x.creditor), amount: x.amount }));
+
+    const withdrawals = records
+      .filter((r) => r.type === "withdraw")
+      .sort((a, b) => b.date.localeCompare(a.date) || b.id - a.id);   // newest first
+
+    const rows = withdrawals.map((r) => {
+      const memoTokens = tokens(r.note || "");
+      let best = null;
+
+      const consider = (cat, list) => list.forEach((c) => {
+        const n = overlap(memoTokens, c.tokens);
+        if (n === 0) return;
+        const score = n + (Math.abs(c.amount - r.amount) < 0.005 ? 0.5 : 0);
+        if (!best || score > best.score) best = { cat, label: c.label, score };
+      });
+
+      if (memoTokens.length) {
+        consider("shopping", shopIdx);
+        consider("debt", debtIdx);      // strict ">" keeps shopping on exact ties
+      }
+      return { r, cat: best ? best.cat : "general", match: best ? best.label : null };
+    });
+
+    const totals = { shopping: 0, debt: 0, general: 0 };
+    const counts = { shopping: 0, debt: 0, general: 0 };
+    rows.forEach(({ r, cat }) => { totals[cat] += r.amount; counts[cat]++; });
+    Object.keys(totals).forEach((k) => { totals[k] = round2(totals[k]); });
+
+    return { rows, totals, counts, total: round2(totals.shopping + totals.debt + totals.general) };
+  }
+
+  /* ----- SVG doughnut chart ----- */
+  function renderDonut(container, cfg) {
+    const total = cfg.segments.reduce((s, x) => s + x.value, 0);
+    const segs = cfg.segments.map((s) => ({ ...s, pct: total > 0 ? (s.value / total) * 100 : 0 }));
+
+    let cum = 0;
+    const circles = segs.map((s, i) => {
+      if (s.pct <= 0) return "";
+      const html = `<circle class="seg k-${s.key}" data-seg="${i}" cx="21" cy="21" r="15.9155" fill="none"
+        stroke-width="6" stroke-dasharray="${s.pct.toFixed(3)} ${(100 - s.pct).toFixed(3)}"
+        stroke-dashoffset="${(25 - cum).toFixed(3)}"><title>${esc(s.label)}: ${fmtPct(s.pct)}</title></circle>`;
+      cum += s.pct;
+      return html;
+    }).join("");
+
+    const centerValue = total > 0 ? cfg.centerValue : "—";
+    const centerLabel = total > 0 ? cfg.centerLabel : t("noData");
+
+    const legend = segs.map((s, i) => `
+      <li class="legend-item" data-seg="${i}" tabindex="0">
+        <span class="dot k-${s.key}"></span>
+        <span class="legend-text">
+          <span class="legend-label">${esc(s.label)}</span>
+          <span class="legend-sub">${esc(s.sub)}</span>
+        </span>
+        <span class="legend-vals">
+          <strong class="legend-pct">${fmtPct(s.pct)}</strong>
+          <span class="legend-amt">${formatMoney(s.value)}</span>
+        </span>
+      </li>`).join("");
+
+    container.innerHTML = `
+      <div class="donut-wrap">
+        <svg class="donut-svg" viewBox="0 0 42 42" role="img" aria-label="${esc(cfg.ariaLabel)}">
+          <circle class="donut-track" cx="21" cy="21" r="15.9155" fill="none" stroke-width="6"></circle>
+          ${circles}
+        </svg>
+        <div class="donut-center">
+          <strong class="donut-value">${centerValue}</strong>
+          <span class="donut-label">${esc(centerLabel)}</span>
+        </div>
+      </div>
+      <ul class="legend">${legend}</ul>`;
+
+    container._donut = { segs, centerValue, centerLabel };
+  }
+
+  function setDonutActive(container, index) {
+    const d = container._donut;
+    if (!d || !d.segs[index]) return;
+    const s = d.segs[index];
+    container.querySelector(".donut-value").textContent = fmtPct(s.pct);
+    container.querySelector(".donut-label").textContent = s.label;
+    container.querySelector(".donut-wrap").classList.add("has-active");
+    container.querySelectorAll("[data-seg]").forEach((el) =>
+      el.classList.toggle("active", Number(el.dataset.seg) === index));
+  }
+
+  function clearDonutActive(container) {
+    const d = container._donut;
+    if (!d) return;
+    container.querySelector(".donut-value").textContent = d.centerValue;
+    container.querySelector(".donut-label").textContent = d.centerLabel;
+    container.querySelector(".donut-wrap").classList.remove("has-active");
+    container.querySelectorAll("[data-seg]").forEach((el) => el.classList.remove("active"));
+  }
+
+  // Hover / focus interaction (bound once; works across re-renders)
+  [cashFlowChart, attrChart].forEach((container) => {
+    container.addEventListener("mouseover", (e) => {
+      const el = e.target.closest("[data-seg]");
+      if (el) setDonutActive(container, Number(el.dataset.seg));
+      else clearDonutActive(container);
+    });
+    container.addEventListener("mouseleave", () => clearDonutActive(container));
+    container.addEventListener("focusin", (e) => {
+      const el = e.target.closest("[data-seg]");
+      if (el) setDonutActive(container, Number(el.dataset.seg));
+    });
+    container.addEventListener("focusout", () => clearDonutActive(container));
+  });
+
+  function renderAnalytics() {
+    if (activeTab !== "analytics") return;
+
+    /* --- Cash flow --- */
+    const deposits = records.filter((r) => r.type === "save");
+    const withdrawals = records.filter((r) => r.type === "withdraw");
+    const income = round2(deposits.reduce((s, r) => s + r.amount, 0));
+    const expenses = round2(withdrawals.reduce((s, r) => s + r.amount, 0));
+    const net = round2(income - expenses);
+    const efficiency = income > 0 ? (net / income) * 100 : null;   // share of income retained
+
+    anIncomeEl.textContent = formatMoney(income);
+    anExpensesEl.textContent = formatMoney(expenses);
+    anNetEl.textContent = formatMoney(net);
+    anNetEl.className = "stat-value " + (net < 0 ? "red" : "yellow");
+    anEfficiencyEl.textContent = efficiency === null ? "—" : fmtPct(efficiency);
+    anEfficiencyEl.className = "stat-value " + (efficiency === null ? "" : efficiency < 0 ? "red" : "green");
+
+    renderDonut(cashFlowChart, {
+      segments: [
+        { key: "income", label: t("incomeLabel"), value: income, sub: t("countLabel").replace("{n}", deposits.length) },
+        { key: "expense", label: t("expenseLabel"), value: expenses, sub: t("countLabel").replace("{n}", withdrawals.length) }
+      ],
+      centerValue: efficiency === null ? "—" : fmtPct(efficiency),
+      centerLabel: t("netEfficiency"),
+      ariaLabel: t("cashFlowTitle")
+    });
+
+    /* --- Expense attribution --- */
+    const attr = buildAttribution();
+    const linkedAmount = round2(attr.totals.shopping + attr.totals.debt);
+    const linkedCount = attr.counts.shopping + attr.counts.debt;
+    const attributedPct = attr.total > 0 ? (linkedAmount / attr.total) * 100 : null;
+
+    renderDonut(attrChart, {
+      segments: [
+        { key: "shopping", label: t("catShopping"), value: attr.totals.shopping, sub: t("countLabel").replace("{n}", attr.counts.shopping) },
+        { key: "debt", label: t("catDebt"), value: attr.totals.debt, sub: t("countLabel").replace("{n}", attr.counts.debt) },
+        { key: "general", label: t("catGeneral"), value: attr.totals.general, sub: t("countLabel").replace("{n}", attr.counts.general) }
+      ],
+      centerValue: attributedPct === null ? "—" : fmtPct(attributedPct),
+      centerLabel: t("attributed"),
+      ariaLabel: t("allocTitle")
+    });
+
+    const totalRows = attr.rows.length;
+    attrSummary.textContent = totalRows
+      ? t("linkedCount").replace("{a}", linkedCount).replace("{b}", totalRows)
+      : "";
+
+    const catMeta = {
+      shopping: { cls: "shop", icon: "fa-cart-shopping", label: t("catShopping") },
+      debt: { cls: "debt", icon: "fa-hand-holding-dollar", label: t("catDebt") },
+      general: { cls: "general", icon: "fa-layer-group", label: t("catGeneral") }
+    };
+
+    attrList.innerHTML = attr.rows.map(({ r, cat, match }) => {
+      const m = catMeta[cat];
+      return `
+        <li class="attr-row">
+          <div class="attr-main">
+            <span class="attr-memo">${r.note ? esc(r.note) : esc(t("noMemo"))}</span>
+            <span class="attr-meta">
+              <span><i class="fa-regular fa-calendar"></i>${formatDate(r.date)}</span>
+              ${match ? `<span><i class="fa-solid fa-link"></i>${t("linkedTo")}: ${esc(match)}</span>` : ""}
+            </span>
+          </div>
+          ${pill(m.cls, m.icon, m.label)}
+          <span class="attr-amount red">${formatMoney(r.amount)}</span>
+        </li>`;
+    }).join("");
+
+    attrEmpty.classList.toggle("hidden", totalRows > 0);
+  }
+
+  /* =====================================================================
+     MASTER BACKUP (export / import across every module)
+     ===================================================================== */
+  function buildMasterBackup() {
+    let balance = 0;
+    const transactions = sortedRecords().map((r) => {
+      balance = round2(balance + (r.type === "save" ? r.amount : -r.amount));
+      return { id: r.id, type: r.type, amount: r.amount, date: r.date, note: r.note || "", balance };
+    });
+
+    const totalDeposits = round2(records.filter((r) => r.type === "save").reduce((s, r) => s + r.amount, 0));
+    const totalWithdrawals = round2(records.filter((r) => r.type === "withdraw").reduce((s, r) => s + r.amount, 0));
+
+    return {
+      app: "PayDay",
+      appVersion: APP_VERSION,
+      exportedAt: new Date().toISOString(),
+      salaryLedger: {
+        currency: "DZD",
+        transactions,
+        summary: { totalDeposits, totalWithdrawals, availableBalance: round2(totalDeposits - totalWithdrawals) }
+      },
+      shoppingList: {
+        budget: shopBudget,
+        items: shopItems.map((x) => ({ id: x.id, name: x.name, cost: x.cost, date: x.date, done: x.done }))
+      },
+      debtTracker: {
+        repaymentBudget: debtBudget,
+        debts: debts.map((x) => ({ id: x.id, creditor: x.creditor, amount: x.amount, date: x.date, settled: x.settled }))
+      },
+      appSettings: { theme, language: lang, readOnly }
+    };
+  }
+
+  // Validates the file and returns only the modules it contains.
+  // Also accepts the legacy ledger-only export (a plain array of transactions).
+  function parseMaster(data) {
+    const out = {};
+    if (Array.isArray(data)) { out.ledger = normalizeLedger(data); return out; }
+    if (!data || typeof data !== "object") throw new Error("Not a backup object");
+
+    const known = ["salaryLedger", "shoppingList", "debtTracker", "appSettings"];
+    if (!known.some((k) => k in data)) throw new Error("Unrecognized backup structure");
+
+    if ("salaryLedger" in data) {
+      const sl = data.salaryLedger;
+      const arr = Array.isArray(sl) ? sl : (sl && Array.isArray(sl.transactions) ? sl.transactions : null);
+      if (!arr) throw new Error("Invalid salaryLedger");
+      out.ledger = normalizeLedger(arr);
+    }
+
+    if ("shoppingList" in data) {
+      const s = data.shoppingList;
+      if (!s || typeof s !== "object" || (s.items !== undefined && !Array.isArray(s.items))) {
+        throw new Error("Invalid shoppingList");
+      }
+      out.shop = { budget: cleanMoney(s.budget), items: normalizeShop(s.items) };
+    }
+
+    if ("debtTracker" in data) {
+      const d = data.debtTracker;
+      if (!d || typeof d !== "object" || (d.debts !== undefined && !Array.isArray(d.debts))) {
+        throw new Error("Invalid debtTracker");
+      }
+      out.debt = { budget: cleanMoney(d.repaymentBudget), debts: normalizeDebts(d.debts) };
+    }
+
+    if ("appSettings" in data) {
+      const a = data.appSettings;
+      if (!a || typeof a !== "object") throw new Error("Invalid appSettings");
+      out.settings = {};
+      if (a.theme === "light" || a.theme === "dark") out.settings.theme = a.theme;
+      if (a.language === "en" || a.language === "ar") out.settings.language = a.language;
+      if (typeof a.readOnly === "boolean") out.settings.readOnly = a.readOnly;
+    }
+    return out;
+  }
+
+  // Writes every module to localStorage, then re-renders the whole UI
+  function applyMaster(parsed) {
+    if (parsed.ledger) {
+      records = parsed.ledger;
+      persist();
+    }
+    if (parsed.shop) {
+      shopBudget = parsed.shop.budget;
+      shopItems = parsed.shop.items;
+      localStorage.setItem(SHOP_BUDGET_KEY, String(shopBudget));
+      persistShop();
+    }
+    if (parsed.debt) {
+      debtBudget = parsed.debt.budget;
+      debts = parsed.debt.debts;
+      localStorage.setItem(DEBT_BUDGET_KEY, String(debtBudget));
+      persistDebts();
+    }
+
+    let langChanged = false;
+    if (parsed.settings) {
+      const s = parsed.settings;
+      if (s.theme) { theme = s.theme; localStorage.setItem(THEME_KEY, theme); }
+      if (s.language && s.language !== lang) {
+        lang = s.language;
+        localStorage.setItem(LANG_KEY, lang);
+        langChanged = true;
+      }
+      if (typeof s.readOnly === "boolean") {
+        readOnly = s.readOnly;
+        localStorage.setItem(READONLY_KEY, readOnly ? "1" : "0");
+      }
+    }
+
+    editingId = null;
+    selectedId = null;
+    shopBudgetEl.value = shopBudget > 0 ? shopBudget : "";
+    debtBudgetEl.value = debtBudget > 0 ? debtBudget : "";
+
+    applyTheme();
+    applyReadOnly();
+    applyLanguage();                     // re-renders ledger, shopping, debts and analytics
+    setTab(activeTab, false);
+    if (langChanged) showQuote(true);
+  }
+
+  exportBtn.addEventListener("click", () => {
+    const blob = new Blob([JSON.stringify(buildMasterBackup(), null, 2)], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `payday_master_backup_${todayISO()}.json`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+  });
+
+  importBtn.addEventListener("click", () => {
+    if (!readOnly) importFile.click();
+  });
+
+  importFile.addEventListener("change", () => {
+    const file = importFile.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      try {
+        const parsed = parseMaster(JSON.parse(reader.result));    // validate before touching any data
+        if (confirm(t("confirmImport"))) {
+          applyMaster(parsed);
+          alert(t("importOk"));
+        }
+      } catch (err) {
+        console.warn("PayDay: import failed.", err);
+        alert(t("importErr"));
+      }
+      importFile.value = "";
+    };
+    reader.readAsText(file);
+  });
+
+  /* =====================================================================
      GLOBAL: language, theme, clock, background
      ===================================================================== */
   function renderDateTime() {
@@ -1109,11 +1578,13 @@
     if (!quotesReady) quoteTextEl.textContent = t("quoteLoading");
 
     langBtn.textContent = lang === "ar" ? "EN" : "AR";
+    applyReadOnly();    // refreshes the localized tooltip on the import button
 
     // Re-render every module in the new language
     renderTable();      // also re-renders the details card
     renderShopping();
     renderDebts();
+    renderAnalytics();
     renderDateTime();
   }
 
@@ -1134,7 +1605,7 @@
   themeBtn.addEventListener("click", () => {
     theme = theme === "dark" ? "light" : "dark";
     localStorage.setItem(THEME_KEY, theme);
-    applyTheme();
+    applyTheme();                        // chart colors follow CSS variables, so no redraw is needed
   });
 
   /* ---------- Floating $ background ---------- */
@@ -1170,6 +1641,7 @@
   shopDateEl.value = today;
   debtDateEl.value = today;
   shopBudgetEl.value = shopBudget > 0 ? shopBudget : "";
+  debtBudgetEl.value = debtBudget > 0 ? debtBudget : "";
 
   renderVersion();
   applyTheme();
